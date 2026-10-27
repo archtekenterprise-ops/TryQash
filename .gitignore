@@ -23,7 +23,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# environment files — credentials must never be committed.
+# environment files - credentials must never be committed.
 # (.env.example is intentionally tracked and re-included below.)
 .env
 .env.*
