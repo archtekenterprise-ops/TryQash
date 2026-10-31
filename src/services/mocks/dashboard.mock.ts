@@ -18,7 +18,7 @@ import type {
  * Master switch for the preview. While true, the dashboard service returns
  * the sample data below. The UI marks it visibly as preview data.
  */
-export const DASHBOARD_MOCK_ENABLED = false;
+export const DASHBOARD_MOCK_ENABLED = true;
 
 /** States the preview can demonstrate, switchable via ?preview=<state>. */
 export type DashboardMockState =
