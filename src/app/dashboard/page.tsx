@@ -48,8 +48,10 @@ export default async function DashboardPage({
   }
 
   const { preview } = await searchParams;
+  
   const result = await getDashboardData({
     email: user?.email ?? null,
+    token: user?.accessToken ?? null,
     preview: typeof preview === "string" ? preview : undefined,
   });
 

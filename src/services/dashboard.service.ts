@@ -6,117 +6,152 @@ import type {
   ReferralInfo,
   UserProfile,
 } from "@/types/dashboard";
-import {
-  DASHBOARD_MOCK_ENABLED,
-  getMockDashboardData,
-  parsePreviewState,
-} from "./mocks/dashboard.mock";
 
 /**
  * Dashboard data service.
  *
- * FRONTEND ONLY. This module separates data retrieval from the dashboard
- * UI: the page asks this service, and the service decides where the data
- * comes from. No backend endpoints exist yet, so the functions below are
- * placeholders backed by an isolated development mock.
- *
- * BACKEND INTEGRATION POINTS (to be defined by the backend developer):
- *
- * 1. Current user's profile - see getCurrentUserProfile().
- * 2. Earnings summary - see getEarningsSummary(). The project's planned
- *    unified earnings ledger and anti-fraud controls are BACKEND
- *    responsibilities; this service only reads their results.
- * 3. Available earning opportunities - see getEarningOpportunities().
- * 4. Recent earning activity - see getRecentEarningActivity().
- * 5. Referral information - see getReferralInfo().
- * 6. getDashboardData() composes all of the above for the page.
- *
- * Endpoint URLs, HTTP methods, payloads, and response formats are NOT
- * defined and are marked TODO. Do not call Supabase (or any provider)
- * from here until the contract is agreed; see docs/BACKEND_INTEGRATION.md,
- * "Dashboard data".
- *
- * Authentication note: the caller (src/app/dashboard/page.tsx) performs the
- * session check. When the real backend lands, every query here must be
- * scoped to the authenticated user server-side per the backend's RLS rules.
- * Nothing here must hardcode the mock values into the final architecture:
- * implement the TODOs and delete src/services/mocks/dashboard.mock.ts.
+ * Connects the dashboard UI to the backend API endpoints.
+ * All calls are made server-side to the /api/dashboard/* endpoints.
  */
 
 export interface DashboardQuery {
   /** Signed-in user's email when a session exists, else null. */
   email: string | null;
+  /** Auth token for API calls */
+  token: string | null;
   /** Preview state override (?preview=...); inert once the mock is removed. */
   preview?: string;
 }
 
-/**
- * Placeholder: the current user's profile. Returns null when the profile
- * cannot be loaded; the UI must then stay neutral (no invented identity).
- * TODO(backend): implement and document the actual endpoint.
- */
-export async function getCurrentUserProfile(): Promise<UserProfile | null> {
-  return getMockDashboardData("loaded").profile;
+async function fetchWithAuth(url: string, token: string | null) {
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch(url, { headers });
+  if (!response.ok) {
+    throw new Error(`API request failed: ${response.status}`);
+  }
+  return response.json();
 }
 
 /**
- * Placeholder: total / available / pending earnings. Returns null when
- * earnings data is missing or unavailable; the UI must show "not
- * available", never invented figures. TODO(backend): real endpoint.
+ * Fetches the current user's profile from the backend.
  */
-export async function getEarningsSummary(): Promise<EarningsSummary | null> {
-  return getMockDashboardData("loaded").earnings;
+export async function getCurrentUserProfile(token: string | null): Promise<UserProfile | null> {
+  try {
+    const data = await fetchWithAuth('/api/dashboard/profile', token);
+    return data.profile;
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    return null;
+  }
 }
 
 /**
- * Placeholder: earning opportunities and their statuses. An empty array
- * means no earning service is integrated yet. TODO(backend): real endpoint.
+ * Fetches the user's earnings summary from the backend.
+ */
+export async function getEarningsSummary(token: string | null): Promise<EarningsSummary | null> {
+  try {
+    const data = await fetchWithAuth('/api/dashboard/earnings', token);
+    return {
+      currency: 'USD',
+      totalEarnedMinor: data.totalEarned || 0,
+      availableEarnedMinor: data.balance || 0,
+      pendingEarnedMinor: 0,
+    };
+  } catch (error) {
+    console.error('Error fetching earnings:', error);
+    return null;
+  }
+}
+
+/**
+ * Returns earning opportunities - currently all marked as coming-soon.
  */
 export async function getEarningOpportunities(): Promise<EarningOpportunity[]> {
-  return getMockDashboardData("loaded").opportunities;
+  return [
+    { id: "surveys", status: "coming-soon" },
+    { id: "offerwalls", status: "coming-soon" },
+    { id: "affiliates", status: "coming-soon" },
+    { id: "referrals", status: "coming-soon" },
+  ];
 }
 
 /**
- * Placeholder: recent earning activity. An empty array means the user
- * simply has none yet. TODO(backend): real endpoint.
+ * Fetches recent earning activity from the backend.
  */
-export async function getRecentEarningActivity(): Promise<EarningActivity[]> {
-  return getMockDashboardData("loaded").activity;
+export async function getRecentEarningActivity(token: string | null): Promise<EarningActivity[]> {
+  try {
+    const data = await fetchWithAuth('/api/dashboard/activity', token);
+    return data.activity.map((item: any) => ({
+      id: item.id || `act-${Date.now()}`,
+      description: item.description,
+      source: item.type,
+      occurredAt: item.date,
+      rewardMinor: item.amount,
+      status: 'approved',
+    }));
+  } catch (error) {
+    console.error('Error fetching activity:', error);
+    return [];
+  }
 }
 
 /**
- * Placeholder: referral code and referral activity summary. Returns null
- * when referral information is unavailable; the card shows its placeholder.
- * TODO(backend): real endpoint. Referral reward rules (the planned
- * three-level system) are a backend responsibility and are not part of this
- * reading shape beyond what the card needs to display.
+ * Fetches referral information from the backend.
  */
-export async function getReferralInfo(): Promise<ReferralInfo | null> {
-  return getMockDashboardData("loaded").referrals;
+export async function getReferralInfo(token: string | null): Promise<ReferralInfo | null> {
+  try {
+    const data = await fetchWithAuth('/api/dashboard/referrals', token);
+    return {
+      code: data.referralCode,
+      friendsJoined: data.stats?.total || 0,
+      rewardsPending: 0,
+    };
+  } catch (error) {
+    console.error('Error fetching referrals:', error);
+    return null;
+  }
 }
 
 /**
- * Loads everything the dashboard page needs. While the development mock is
- * enabled (src/services/mocks/dashboard.mock.ts, DASHBOARD_MOCK_ENABLED) it
- * returns sample data, clearly labelled as such in the UI. The ?preview=
- * query selects a mock state purely for development. Once the mock module
- * is deleted, this function must call the real endpoints.
+ * Loads everything the dashboard page needs from the backend.
  */
 export async function getDashboardData(
   query: DashboardQuery,
 ): Promise<DashboardDataResult> {
-  if (!DASHBOARD_MOCK_ENABLED) {
-    void query;
+  const { token } = query;
+
+  if (!token) {
     return { status: "not-connected" };
   }
 
-  const state = parsePreviewState(query.preview);
+  try {
+    const [profile, earnings, opportunities, activity, referrals] = await Promise.all([
+      getCurrentUserProfile(token),
+      getEarningsSummary(token),
+      getEarningOpportunities(),
+      getRecentEarningActivity(token),
+      getReferralInfo(token),
+    ]);
 
-  if (state === "error") {
-    // Simulates a retrieval failure so the error and retry state is real.
+    return {
+      status: "ok",
+      data: {
+        profile,
+        earnings,
+        opportunities,
+        activity,
+        referrals,
+      },
+    };
+  } catch (error) {
+    console.error('Error loading dashboard data:', error);
     return { status: "error" };
   }
-
-  const data = getMockDashboardData(state);
-  return { status: "ok", data };
 }

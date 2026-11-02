@@ -46,6 +46,7 @@ export async function createServerSupabaseClient(): Promise<SupabaseClient> {
 export interface AuthenticatedUser {
   id: string;
   email: string | null;
+  accessToken: string | null;
 }
 
 /**
@@ -65,7 +66,12 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
     if (error || !data.user) {
       return null;
     }
-    return { id: data.user.id, email: data.user.email ?? null };
+    const { data: sessionData } = await supabase.auth.getSession();
+    return { 
+      id: data.user.id, 
+      email: data.user.email ?? null,
+      accessToken: sessionData.session?.access_token ?? null,
+    };
   } catch {
     return null;
   }

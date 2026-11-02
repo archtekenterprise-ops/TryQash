@@ -1,69 +1,13 @@
 "use client";
 
-/* -------------------------------------------------------------------------
- * DEMO MOCK - DELETE THIS BLOCK WHEN THE BACKEND IS CONNECTED.
- *
- * Set USE_DEMO_MOCK to true to demonstrate every UI state without a
- * backend. It performs NO real verification and must never be enabled in
- * production. Demo codes: 000000 = expired, 111111 = invalid,
- * 222222 = rate limited, anything else = success.
- * ---------------------------------------------------------------------- */
-const USE_DEMO_MOCK = false;
-
-function mockDelay(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function mockVerify(code: string): Promise<VerificationResult> {
-  await mockDelay(1200);
-  if (code === "000000") {
-    return { ok: false, error: { code: "EXPIRED_CODE" } };
-  }
-  if (code === "111111") {
-    return { ok: false, error: { code: "INVALID_CODE" } };
-  }
-  if (code === "222222") {
-    return { ok: false, error: { code: "RATE_LIMITED" } };
-  }
-  return { ok: true };
-}
-
-async function mockResend(): Promise<VerificationResult> {
-  await mockDelay(1000);
-  return { ok: true };
-}
-/* --------------------------- END DEMO MOCK --------------------------- */
-
 /**
  * Email verification service.
  *
- * FRONTEND ONLY. This is the single place the verify-email page talks to
- * for verification operations, and it is deliberately independent of any
- * authentication provider (including Supabase). No backend endpoints
- * exist yet, so both functions return a NOT_CONNECTED result instead of
- * pretending to succeed. Nothing here calls Brevo: transactional email
- * will be delivered by the backend in a later phase.
- *
- * BACKEND INTEGRATION POINTS (to be defined by the backend developer):
- *
- * 1. verifyEmailCode(input) - verify the six-digit code for an email.
- *    Endpoint, HTTP method, request payload, and response format are NOT
- *    defined yet. The result must distinguish: valid code, invalid code,
- *    expired code, and rate limited.
- * 2. resendVerificationCode(input) - send a new code to the address.
- *    Same: endpoint/method/payload/response to be agreed. The backend owns
- *    the real resend rules (cooldown, attempt limits); the frontend only
- *    mirrors a cooldown in the UI.
- * 3. The frontend identifies the user by email address. If the backend
- *    prefers a session token or a pending-verification identifier, change
- *    the input types in this file only - the page does not depend on the
- *    transport details.
- *
- * See docs/BACKEND_INTEGRATION.md, "Email verification".
+ * Connects the verify-email page to the backend API endpoints.
+ * Calls /api/verify-email and /api/verify-email/resend.
  */
 
 export type VerificationErrorCode =
-  | "NOT_CONNECTED"
   | "INVALID_CODE"
   | "EXPIRED_CODE"
   | "RATE_LIMITED"
@@ -88,32 +32,64 @@ export interface ResendVerificationCodeInput {
   email: string;
 }
 
-function notConnected(): VerificationResult {
-  return { ok: false, error: { code: "NOT_CONNECTED" } };
+async function mapError(error: any): VerificationError {
+  const message = error?.message || 'Unknown error';
+  
+  if (message.includes('expired') || message.includes('EXPIRED')) {
+    return { code: "EXPIRED_CODE", message };
+  }
+  if (message.includes('invalid') || message.includes('INVALID')) {
+    return { code: "INVALID_CODE", message };
+  }
+  if (message.includes('rate') || message.includes('RATE')) {
+    return { code: "RATE_LIMITED", message };
+  }
+  
+  return { code: "UNKNOWN", message };
 }
 
 export async function verifyEmailCode(
   input: VerifyEmailCodeInput,
 ): Promise<VerificationResult> {
-  if (USE_DEMO_MOCK) {
-    return mockVerify(input.code);
-  }
+  try {
+    const response = await fetch('/api/verify-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: input.email, token: input.code }),
+    });
 
-  // TODO(backend): call the verification endpoint once the contract is
-  // agreed, and map its response to VerificationResult. Until then the
-  // page shows a clear "not connected" state and never fakes a success.
-  void input;
-  return notConnected();
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { ok: false, error: mapError(data) };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error('Error verifying email:', error);
+    return { ok: false, error: { code: "UNKNOWN", message: 'Network error' } };
+  }
 }
 
 export async function resendVerificationCode(
   input: ResendVerificationCodeInput,
 ): Promise<VerificationResult> {
-  if (USE_DEMO_MOCK) {
-    return mockResend();
-  }
+  try {
+    const response = await fetch('/api/verify-email/resend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: input.email }),
+    });
 
-  // TODO(backend): call the resend endpoint once the contract is agreed.
-  void input;
-  return notConnected();
+    const data = await response.json();
+
+    if (!response.ok) {
+      return { ok: false, error: mapError(data) };
+    }
+
+    return { ok: true };
+  } catch (error) {
+    console.error('Error resending verification:', error);
+    return { ok: false, error: { code: "UNKNOWN", message: 'Network error' } };
+  }
 }
