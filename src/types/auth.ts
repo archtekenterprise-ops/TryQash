@@ -3,7 +3,7 @@ import type { TranslationKey } from "@/i18n/dictionaries";
 /**
  * Shared authentication types.
  *
- * Field names here follow the TryQash database plan:
+ * Field names here follow the Referrago database plan:
  * - email + password are Supabase Auth credentials (NOT profiles columns).
  * - username / country / referral_code belong to the profile and referral
  *   creation process handled by the database handle_new_user() trigger.

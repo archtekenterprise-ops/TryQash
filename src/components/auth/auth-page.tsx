@@ -24,7 +24,7 @@ interface AuthPageMeta {
   titleKey: TranslationKey;
   /** Muted helper line under the heading. */
   descriptionKey: TranslationKey;
-  /** Footer prompt text, e.g. "New to TryQash?". */
+  /** Footer prompt text, e.g. "New to Referrago?". */
   footerPromptKey: TranslationKey;
   /** Footer link text. */
   footerLinkKey: TranslationKey;

@@ -8,6 +8,7 @@
  */
 
 export type VerificationErrorCode =
+  | "NOT_CONNECTED"
   | "INVALID_CODE"
   | "EXPIRED_CODE"
   | "RATE_LIMITED"
@@ -32,7 +33,7 @@ export interface ResendVerificationCodeInput {
   email: string;
 }
 
-async function mapError(error: any): VerificationError {
+function mapError(error: any): VerificationError {
   const message = error?.message || 'Unknown error';
   
   if (message.includes('expired') || message.includes('EXPIRED')) {

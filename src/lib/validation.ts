@@ -11,7 +11,7 @@ import type { TranslationKey } from "@/i18n/dictionaries";
  * replaces server-side / database enforcement.
  *
  * Rules marked PROVISIONAL still need confirmation against the backend.
- * The username and country rules mirror the TryQash database plan
+ * The username and country rules mirror the Referrago database plan
  * (3-20 char username of letters/numbers/underscores, country char(2)).
  */
 

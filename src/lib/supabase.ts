@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Central Supabase client module for the TryQash frontend.
+ * Central Supabase client module for the Referrago frontend.
  *
  * Configuration is read from public environment variables:
  *

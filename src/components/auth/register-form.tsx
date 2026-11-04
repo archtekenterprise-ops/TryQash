@@ -32,7 +32,7 @@ interface FieldErrors {
 }
 
 /**
- * Registration form following the TryQash database plan.
+ * Registration form following the Referrago database plan.
  *
  * Fields: email + password (Supabase Auth credentials), username (3-20
  * letters/numbers/underscores), country (ISO alpha-2 code), and an

@@ -1,7 +1,7 @@
 /**
- * Dashboard data models for the TryQash earning platform.
+ * Dashboard data models for the Referrago earning platform.
  *
- * Field names follow the TryQash database plan for the profile section.
+ * Field names follow the Referrago database plan for the profile section.
  * Earnings, activity, and referral shapes are PROVISIONAL: their final
  * structure depends on the backend contract (ledger, provider integrations,
  * referral rules). Fields marked "provisional" exist only for this preview

@@ -1,7 +1,7 @@
 /**
  * Login identifier handling.
  *
- * TryQash lets a user sign in with their email address or username.
+ * Referrago lets a user sign in with their email address or username.
  * Supabase Auth itself only authenticates by email and has no concept of a
  * username, so the frontend first classifies what the user typed and then
  * takes the matching path (see src/services/auth.service.ts).

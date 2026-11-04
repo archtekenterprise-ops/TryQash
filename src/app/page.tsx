@@ -93,7 +93,7 @@ const TABLE_ROWS: Array<{
 /**
  * Design-system preview page. Everything on this page is clearly labelled
  * placeholder material used to verify the shared layout and components
- * against the visual reference - it contains no real TryQash data.
+ * against the visual reference - it contains no real Referrago data.
  *
  * This page is purely presentational and holds no server data, so it is a
  * client component: that keeps every string in useTranslation(), which is

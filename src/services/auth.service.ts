@@ -21,7 +21,7 @@ import type {
  * never import Supabase directly. Messages the frontend owns are returned
  * as translation keys so they appear in the active language.
  *
- * Registration data flow (per the TryQash database plan):
+ * Registration data flow (per the Referrago database plan):
  * - Email + password go to Supabase Auth. They are never stored in
  *   profiles by the frontend.
  * - username, country, and referral_code are passed as sign-up metadata

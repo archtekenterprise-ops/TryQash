@@ -91,7 +91,7 @@ export function AppShell({ children }: AppShellProps) {
             href="/"
             className="rounded-control text-base font-semibold tracking-tight text-heading"
           >
-            TryQash
+            Referrago
           </Link>
           <LanguageSwitcher className="ml-auto" />
         </div>
