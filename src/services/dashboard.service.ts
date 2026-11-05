@@ -6,12 +6,13 @@ import type {
   ReferralInfo,
   UserProfile,
 } from "@/types/dashboard";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 /**
  * Dashboard data service.
  *
- * Connects the dashboard UI to the backend API endpoints.
- * All calls are made server-side to the /api/dashboard/* endpoints.
+ * Connects the dashboard UI directly to Supabase.
+ * All calls are made server-side using the Supabase client.
  */
 
 export interface DashboardQuery {
@@ -23,29 +24,23 @@ export interface DashboardQuery {
   preview?: string;
 }
 
-async function fetchWithAuth(url: string, token: string | null) {
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(url, { headers });
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.status}`);
-  }
-  return response.json();
-}
-
 /**
- * Fetches the current user's profile from the backend.
+ * Fetches the current user's profile from Supabase.
  */
-export async function getCurrentUserProfile(token: string | null): Promise<UserProfile | null> {
+export async function getCurrentUserProfile(): Promise<UserProfile | null> {
   try {
-    const data = await fetchWithAuth('/api/dashboard/profile', token);
-    return data.profile;
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return null;
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('id, username, country, phone, status, referral_code, created_at, updated_at')
+      .eq('id', user.id)
+      .single();
+
+    return profile;
   } catch (error) {
     console.error('Error fetching profile:', error);
     return null;
@@ -53,15 +48,25 @@ export async function getCurrentUserProfile(token: string | null): Promise<UserP
 }
 
 /**
- * Fetches the user's earnings summary from the backend.
+ * Fetches the user's earnings summary from Supabase.
  */
-export async function getEarningsSummary(token: string | null): Promise<EarningsSummary | null> {
+export async function getEarningsSummary(): Promise<EarningsSummary | null> {
   try {
-    const data = await fetchWithAuth('/api/dashboard/earnings', token);
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return null;
+
+    const { data: wallet } = await supabase
+      .from('wallets')
+      .select('balance, total_earned, total_withdrawn')
+      .eq('user_id', user.id)
+      .single();
+
     return {
       currency: 'USD',
-      totalEarnedMinor: data.totalEarned || 0,
-      availableEarnedMinor: data.balance || 0,
+      totalEarnedMinor: wallet?.total_earned || 0,
+      availableEarnedMinor: wallet?.balance || 0,
       pendingEarnedMinor: 0,
     };
   } catch (error) {
@@ -83,19 +88,30 @@ export async function getEarningOpportunities(): Promise<EarningOpportunity[]> {
 }
 
 /**
- * Fetches recent earning activity from the backend.
+ * Fetches recent earning activity from Supabase.
  */
-export async function getRecentEarningActivity(token: string | null): Promise<EarningActivity[]> {
+export async function getRecentEarningActivity(): Promise<EarningActivity[]> {
   try {
-    const data = await fetchWithAuth('/api/dashboard/activity', token);
-    return data.activity.map((item: any) => ({
-      id: item.id || `act-${Date.now()}`,
-      description: item.description,
-      source: item.type,
-      occurredAt: item.date,
-      rewardMinor: item.amount,
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return [];
+
+    const { data: ledger } = await supabase
+      .from('ledger_entries')
+      .select('entry_type, amount, note, created_at')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    return ledger?.map(entry => ({
+      id: `act-${entry.created_at}`,
+      description: entry.note || entry.entry_type,
+      source: entry.entry_type,
+      occurredAt: entry.created_at,
+      rewardMinor: entry.amount,
       status: 'approved',
-    }));
+    })) || [];
   } catch (error) {
     console.error('Error fetching activity:', error);
     return [];
@@ -103,14 +119,43 @@ export async function getRecentEarningActivity(token: string | null): Promise<Ea
 }
 
 /**
- * Fetches referral information from the backend.
+ * Fetches referral information from Supabase.
  */
-export async function getReferralInfo(token: string | null): Promise<ReferralInfo | null> {
+export async function getReferralInfo(): Promise<ReferralInfo | null> {
   try {
-    const data = await fetchWithAuth('/api/dashboard/referrals', token);
+    const supabase = await createServerSupabaseClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) return null;
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('referral_code')
+      .eq('id', user.id)
+      .single();
+
+    const { data: referrals } = await supabase
+      .from('referrals')
+      .select('level')
+      .eq('referrer_id', user.id);
+
+    const levelCounts = {
+      level1: 0,
+      level2: 0,
+      level3: 0,
+      total: 0,
+    };
+
+    referrals?.forEach(ref => {
+      if (ref.level === 1) levelCounts.level1++;
+      else if (ref.level === 2) levelCounts.level2++;
+      else if (ref.level === 3) levelCounts.level3++;
+      levelCounts.total++;
+    });
+
     return {
-      code: data.referralCode,
-      friendsJoined: data.stats?.total || 0,
+      code: profile?.referral_code || '',
+      friendsJoined: levelCounts.total,
       rewardsPending: 0,
     };
   } catch (error) {
@@ -120,7 +165,7 @@ export async function getReferralInfo(token: string | null): Promise<ReferralInf
 }
 
 /**
- * Loads everything the dashboard page needs from the backend.
+ * Loads everything the dashboard page needs from Supabase.
  */
 export async function getDashboardData(
   query: DashboardQuery,
@@ -133,11 +178,11 @@ export async function getDashboardData(
 
   try {
     const [profile, earnings, opportunities, activity, referrals] = await Promise.all([
-      getCurrentUserProfile(token),
-      getEarningsSummary(token),
+      getCurrentUserProfile(),
+      getEarningsSummary(),
       getEarningOpportunities(),
-      getRecentEarningActivity(token),
-      getReferralInfo(token),
+      getRecentEarningActivity(),
+      getReferralInfo(),
     ]);
 
     return {
