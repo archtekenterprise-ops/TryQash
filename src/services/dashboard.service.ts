@@ -40,7 +40,19 @@ export async function getCurrentUserProfile(): Promise<UserProfile | null> {
       .eq('id', user.id)
       .single();
 
-    return profile;
+    if (!profile) return null;
+
+    // Correction : Mapping explicite de snake_case vers camelCase pour referralCode
+    return {
+      id: profile.id,
+      username: profile.username,
+      country: profile.country,
+      phone: profile.phone,
+      status: profile.status,
+      referralCode: profile.referral_code,
+      createdAt: profile.created_at,
+      updated_at: profile.updated_at,
+    } as UserProfile;
   } catch (error) {
     console.error('Error fetching profile:', error);
     return null;
