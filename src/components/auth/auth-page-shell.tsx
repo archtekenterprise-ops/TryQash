@@ -39,7 +39,7 @@ export function AuthPageShell({
               href="/"
               className="rounded-control text-lg font-semibold tracking-tight text-heading"
             >
-              TryQash
+              Referrago
             </Link>
           </div>
 

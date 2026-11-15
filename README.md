@@ -1,6 +1,6 @@
-# TryQash - Frontend
+# Referrago - Frontend
 
-The **frontend application** for TryQash: Next.js 16 (App Router) + React 19 +
+The **frontend application** for Referrago: Next.js 16 (App Router) + React 19 +
 TypeScript + Tailwind CSS 4, with Supabase Auth integration prepared.
 
 Current state: the design system, monochrome visual direction, shared
@@ -40,7 +40,7 @@ cp .env.example .env.local
 | -------------------------------------- | -------- |
 | `NEXT_PUBLIC_SUPABASE_URL`             | Supabase project URL. Empty until a project exists. |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable (public) key. `NEXT_PUBLIC_SUPABASE_ANON_KEY` is accepted as a legacy fallback. |
-| `DATABASE_URL`                         | Platform scaffold only (`/api/health` route and `src/db/`). Not used by the TryQash frontend. |
+| `DATABASE_URL`                         | Platform scaffold only (`/api/health` route and `src/db/`). Not used by the Referrago frontend. |
 
 Rules that always apply:
 
@@ -147,7 +147,7 @@ Pieces:
    `/reset-password`, which shows a clear invalid/expired-link state when no
    session exists).
 
-### Registration data flow (per the TryQash database plan)
+### Registration data flow (per the Referrago database plan)
 
 The database plan defines the contract implemented by `/register`:
 
@@ -230,7 +230,7 @@ Delete that block when connecting the real endpoints.
 
 ## Dashboard (`/dashboard`)
 
-TryQash is an **online earning platform**: users earn through surveys,
+Referrago is an **online earning platform**: users earn through surveys,
 offerwalls, affiliate programmes, and referrals. The dashboard focuses on
 those activities, not money transfers. Frontend-only, composed of:
 

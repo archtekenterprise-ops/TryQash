@@ -6,11 +6,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "TryQash",
-    template: "%s - TryQash",
+    default: "Referrago",
+    template: "%s - Referrago",
   },
   description:
-    "TryQash web application. The frontend foundation and shared design system are in place; product features follow in later milestones.",
+    "Referrago web application. The frontend foundation and shared design system are in place; product features follow in later milestones.",
 };
 
 /**

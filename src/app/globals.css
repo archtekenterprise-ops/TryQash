@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 /*
- * TryQash design tokens - provisional visual direction.
+ * Referrago design tokens - provisional visual direction.
  *
  * Confirmed direction: a monochrome (black and white) interface - white
  * surfaces, black primary actions, and a grey scale for hierarchy, per the
  * approved reference. Status colors (green = positive, amber = attention,
  * red = negative) are used only for state semantics, never as theme accents.
  *
- * These are NOT official TryQash brand guidelines. All values live here so
+ * These are NOT official Referrago brand guidelines. All values live here so
  * components consume semantic tokens and the direction can be adjusted
  * later without rewriting components.
  */

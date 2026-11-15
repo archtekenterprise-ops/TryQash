@@ -1,6 +1,6 @@
 # Backend Integration Guide
 
-How the TryQash frontend connects to the backend, and what both developers
+How the Referrago frontend connects to the backend, and what both developers
 need before wiring up a feature. Read this together with
 [FRONTEND_GUIDE.md](FRONTEND_GUIDE.md).
 
@@ -142,7 +142,7 @@ Standard UI pattern (see any auth form, e.g.
 5. Sign-out goes through `signOut()` in the service and returns to
    `/login` (`src/components/auth/sign-out-button.tsx`).
 
-### Registration data flow (per the TryQash database plan)
+### Registration data flow (per the Referrago database plan)
 
 **[implemented on the frontend; backend verification pending]** The
 frontend implements the plan's contract exactly; the database-side pieces
@@ -261,7 +261,7 @@ Notes for the backend developer:
 
 **[implemented on the frontend; backend not connected]**
 
-TryQash is an online earning platform (surveys, offerwalls, affiliates,
+Referrago is an online earning platform (surveys, offerwalls, affiliates,
 referrals). The dashboard composes: sidebar, top bar, earnings cards
 (Total/Available/Pending), Ways to Earn, Recent Activity, Referral summary,
 and Getting started.

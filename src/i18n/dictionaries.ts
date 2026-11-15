@@ -106,7 +106,7 @@ const en = {
   "opp.affiliates.action": "Explore Affiliates",
   "opp.referrals.title": "Referrals",
   "opp.referrals.desc":
-    "Invite others to TryQash and you may earn referral rewards under the platform's referral rules.",
+    "Invite others to Referrago and you may earn referral rewards under the platform's referral rules.",
   "opp.referrals.action": "Invite Friends",
 
   // ---- Recent Activity ----
@@ -151,7 +151,7 @@ const en = {
 
   // ---- Login ----
   "login.metaTitle": "Sign in",
-  "login.metaDescription": "Sign in to your TryQash account.",
+  "login.metaDescription": "Sign in to your Referrago account.",
   "login.title": "Sign in",
   "login.description":
     "Use your email or username to access your account.",
@@ -161,12 +161,12 @@ const en = {
   "login.passwordPlaceholder": "Your password",
   "login.forgotLink": "Forgot password?",
   "login.submit": "Sign in",
-  "login.footerPrompt": "New to TryQash?",
+  "login.footerPrompt": "New to Referrago?",
   "login.footerLink": "Create an account",
 
   // ---- Registration ----
   "register.metaTitle": "Create account",
-  "register.metaDescription": "Create your TryQash account.",
+  "register.metaDescription": "Create your Referrago account.",
   "register.title": "Create your account",
   "register.description":
     "Register with your email, username, country, and password.",
@@ -226,7 +226,7 @@ const en = {
   // ---- Forgot password ----
   "forgot.metaTitle": "Forgot password",
   "forgot.metaDescription":
-    "Request password recovery instructions for your TryQash account.",
+    "Request password recovery instructions for your Referrago account.",
   "forgot.title": "Forgot password",
   "forgot.description":
     "Enter your account email and we will send recovery instructions.",
@@ -242,7 +242,7 @@ const en = {
 
   // ---- Reset password ----
   "reset.metaTitle": "Set a new password",
-  "reset.metaDescription": "Choose a new password for your TryQash account.",
+  "reset.metaDescription": "Choose a new password for your Referrago account.",
   "reset.title": "Set a new password",
   "reset.description": "Choose a new password for your account.",
   "reset.checking": "Checking your reset link...",
@@ -263,7 +263,7 @@ const en = {
 
   // ---- Dashboard ----
   "dashboard.metaTitle": "Dashboard",
-  "dashboard.metaDescription": "Your TryQash dashboard.",
+  "dashboard.metaDescription": "Your Referrago dashboard.",
   "dashboard.title": "Dashboard",
   "dashboard.signedInAs": "Signed in as {account}.",
   "dashboard.yourAccount": "your account",
@@ -288,7 +288,7 @@ const en = {
     "Temporary application shell and shared components following the approved visual reference. This page verifies the foundation before real screens are built.",
   "preview.bannerTitle": "Design preview only",
   "preview.bannerBody":
-    "Layout, navigation labels, and all content shown here are placeholders for visual verification - they are not confirmed TryQash features or data.",
+    "Layout, navigation labels, and all content shown here are placeholders for visual verification - they are not confirmed Referrago features or data.",
   "preview.primaryAction": "Primary action",
   "preview.secondaryAction": "Secondary action",
   "preview.cardsTitle": "Cards",
@@ -347,7 +347,7 @@ const en = {
   "preview.tablePlaceholder": "Placeholder text",
   "preview.idle": "Idle",
   "preview.tableFooter":
-    "Placeholder rows - no real TryQash data is displayed.",
+    "Placeholder rows - no real Referrago data is displayed.",
   "preview.placeholderCard": "Placeholder card",
   "preview.reserved": "Reserved for future content.",
   "preview.endNote":
@@ -491,7 +491,7 @@ const fr: Record<TranslationKey, string> = {
   "opp.affiliates.action": "Explorer l'affiliation",
   "opp.referrals.title": "Parrainages",
   "opp.referrals.desc":
-    "Invitez d'autres utilisateurs sur TryQash et gagnez eventuellement des recompenses de parrainage selon les regles de la plateforme.",
+    "Invitez d'autres utilisateurs sur Referrago et gagnez eventuellement des recompenses de parrainage selon les regles de la plateforme.",
   "opp.referrals.action": "Inviter des amis",
 
   // ---- Recent Activity ----
@@ -536,7 +536,7 @@ const fr: Record<TranslationKey, string> = {
 
   // ---- Login ----
   "login.metaTitle": "Connexion",
-  "login.metaDescription": "Connectez-vous a votre compte TryQash.",
+  "login.metaDescription": "Connectez-vous a votre compte Referrago.",
   "login.title": "Connexion",
   "login.description":
     "Utilisez votre e-mail ou votre nom d'utilisateur pour acceder a votre compte.",
@@ -547,12 +547,12 @@ const fr: Record<TranslationKey, string> = {
   "login.passwordPlaceholder": "Votre mot de passe",
   "login.forgotLink": "Mot de passe oublie ?",
   "login.submit": "Se connecter",
-  "login.footerPrompt": "Nouveau sur TryQash ?",
+  "login.footerPrompt": "Nouveau sur Referrago ?",
   "login.footerLink": "Creer un compte",
 
   // ---- Registration ----
   "register.metaTitle": "Creer un compte",
-  "register.metaDescription": "Creez votre compte TryQash.",
+  "register.metaDescription": "Creez votre compte Referrago.",
   "register.title": "Creez votre compte",
   "register.description":
     "Inscrivez-vous avec votre e-mail, nom d'utilisateur, pays et mot de passe.",
@@ -614,7 +614,7 @@ const fr: Record<TranslationKey, string> = {
   // ---- Forgot password ----
   "forgot.metaTitle": "Mot de passe oublie",
   "forgot.metaDescription":
-    "Demandez les instructions de recuperation de mot de passe pour votre compte TryQash.",
+    "Demandez les instructions de recuperation de mot de passe pour votre compte Referrago.",
   "forgot.title": "Mot de passe oublie",
   "forgot.description":
     "Saisissez l'e-mail de votre compte et nous vous enverrons les instructions de recuperation.",
@@ -632,7 +632,7 @@ const fr: Record<TranslationKey, string> = {
   // ---- Reset password ----
   "reset.metaTitle": "Definir un nouveau mot de passe",
   "reset.metaDescription":
-    "Choisissez un nouveau mot de passe pour votre compte TryQash.",
+    "Choisissez un nouveau mot de passe pour votre compte Referrago.",
   "reset.title": "Definir un nouveau mot de passe",
   "reset.description": "Choisissez un nouveau mot de passe pour votre compte.",
   "reset.checking": "Verification de votre lien...",
@@ -653,7 +653,7 @@ const fr: Record<TranslationKey, string> = {
 
   // ---- Dashboard ----
   "dashboard.metaTitle": "Tableau de bord",
-  "dashboard.metaDescription": "Votre tableau de bord TryQash.",
+  "dashboard.metaDescription": "Votre tableau de bord Referrago.",
   "dashboard.title": "Tableau de bord",
   "dashboard.signedInAs": "Connecte en tant que {account}.",
   "dashboard.yourAccount": "votre compte",
@@ -678,7 +678,7 @@ const fr: Record<TranslationKey, string> = {
     "Structure applicative provisoire et composants partages suivant la reference visuelle approuvee. Cette page verifie les fondations avant la creation des ecrans reels.",
   "preview.bannerTitle": "Apercu de developpement uniquement",
   "preview.bannerBody":
-    "La mise en page, les libelles de navigation et tout le contenu affiche ici sont provisoires et servent a la verification visuelle - ce ne sont ni des fonctionnalites ni des donnees TryQash confirmees.",
+    "La mise en page, les libelles de navigation et tout le contenu affiche ici sont provisoires et servent a la verification visuelle - ce ne sont ni des fonctionnalites ni des donnees Referrago confirmees.",
   "preview.primaryAction": "Action principale",
   "preview.secondaryAction": "Action secondaire",
   "preview.cardsTitle": "Cartes",
@@ -738,7 +738,7 @@ const fr: Record<TranslationKey, string> = {
   "preview.tablePlaceholder": "Texte provisoire",
   "preview.idle": "Inactif",
   "preview.tableFooter":
-    "Lignes provisoires - aucune donnee reelle TryQash n'est affichee.",
+    "Lignes provisoires - aucune donnee reelle Referrago n'est affichee.",
   "preview.placeholderCard": "Carte provisoire",
   "preview.reserved": "Reserve a un contenu futur.",
   "preview.endNote":
