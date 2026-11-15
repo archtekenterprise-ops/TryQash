@@ -35,7 +35,7 @@ interface NavSection {
 }
 
 /**
- * Intended Referrago navigation. Items whose pages are not implemented yet
+ * Intended TryQash navigation. Items whose pages are not implemented yet
  * are rendered as disabled placeholders with a "soon" marker, never as
  * links to non-existent routes.
  */
@@ -66,7 +66,7 @@ export interface SidebarProps {
 }
 
 /**
- * Narrow grouped sidebar from the visual reference: Referrago mark, small
+ * Narrow grouped sidebar from the visual reference: TryQash mark, small
  * uppercase section labels, line icons beside items, grey active state,
  * and the sign-out action pinned at the bottom.
  *
@@ -106,10 +106,10 @@ export function Sidebar({ onNavigate }: SidebarProps) {
     <div className="flex h-full flex-col bg-surface-sidebar">
       <div className="flex h-14 shrink-0 items-center border-b border-surface px-4">
         <Link
-          href="/"
+          href="/dashboard"
           className="rounded-control text-base font-semibold tracking-tight text-heading"
         >
-          Referrago
+          TryQash
         </Link>
       </div>
 

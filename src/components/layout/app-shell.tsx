@@ -88,10 +88,10 @@ export function AppShell({ children }: AppShellProps) {
             <Menu aria-hidden="true" className="size-4" />
           </button>
           <Link
-            href="/"
+            href="/dashboard"
             className="rounded-control text-base font-semibold tracking-tight text-heading"
           >
-            Referrago
+            TryQash
           </Link>
           <LanguageSwitcher className="ml-auto" />
         </div>

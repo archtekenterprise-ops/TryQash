@@ -35,10 +35,10 @@ export const LOCALE_SHORT: Record<Locale, string> = {
 };
 
 /** App name used in document titles. */
-export const APP_NAME = "Referrago";
+export const APP_NAME = "TryQash";
 
 /**
- * Mirrors the metadata title template "%s - Referrago" in
+ * Mirrors the metadata title template "%s - TryQash" in
  * src/app/layout.tsx, so the client-side title matches the server-rendered
  * one exactly.
  */
