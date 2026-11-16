@@ -2,6 +2,7 @@
 
 import { ClipboardList, Link2, Package, Rocket, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { useTranslation } from "@/i18n/context";
 import type { TranslationKey } from "@/i18n/dictionaries";
@@ -9,6 +10,7 @@ import type { EarningOpportunity, EarningOpportunityId } from "@/types/dashboard
 
 interface OpportunitySpec {
   id: EarningOpportunityId;
+  href: string;
   icon: LucideIcon;
   /** Full literal Tailwind classes so the build detects every accent. */
   accent: {
@@ -30,6 +32,7 @@ interface OpportunitySpec {
 const OPPORTUNITIES: OpportunitySpec[] = [
   {
     id: "surveys",
+    href: "/surveys",
     icon: ClipboardList,
     accent: {
       tile: "bg-accent-sky text-white shadow-sm",
@@ -42,6 +45,7 @@ const OPPORTUNITIES: OpportunitySpec[] = [
   },
   {
     id: "offerwalls",
+    href: "/offerwalls",
     icon: Package,
     accent: {
       tile: "bg-accent-teal text-white shadow-sm",
@@ -54,6 +58,7 @@ const OPPORTUNITIES: OpportunitySpec[] = [
   },
   {
     id: "affiliates",
+    href: "/affiliate-programmes",
     icon: Link2,
     accent: {
       tile: "bg-accent-violet text-white shadow-sm",
@@ -66,6 +71,7 @@ const OPPORTUNITIES: OpportunitySpec[] = [
   },
   {
     id: "referrals",
+    href: "/referrals",
     icon: Users,
     accent: {
       tile: "bg-accent-rose text-white shadow-sm",
@@ -134,29 +140,20 @@ export function OpportunitiesSection({ opportunities }: OpportunitiesSectionProp
                 <p className="mt-1.5 flex-1 text-sm leading-relaxed text-muted">
                   {t(opportunity.descriptionKey)}
                 </p>
-                <div className="mt-4">
-                  {available ? (
-                    <span
-                      className={`button-press inline-flex h-8 items-center rounded-control px-3 text-xs font-semibold ${opportunity.accent.cta}`}
-                    >
-                      {t(opportunity.actionKey)}
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-2">
-                      <button
-                        type="button"
-                        disabled
-                        aria-disabled="true"
-                        title={t("opp.comingSoon")}
-                        className="button-press inline-flex h-8 cursor-not-allowed items-center rounded-control border border-surface-strong bg-surface-page px-3 text-xs font-medium text-body opacity-60"
-                      >
-                        {t(opportunity.actionKey)}
-                      </button>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <Link
+                    href={opportunity.href}
+                    className={`button-press inline-flex h-8 items-center rounded-control px-3 text-xs font-semibold ${opportunity.accent.cta}`}
+                  >
+                    {t(opportunity.actionKey)}
+                  </Link>
+                  {!available ? (
+                    <>
                       <span className="text-[10px] font-medium uppercase tracking-wider text-subtle">
                         {t("opp.comingSoon")}
                       </span>
-                    </span>
-                  )}
+                    </>
+                  ) : null}
                 </div>
               </Card>
             );

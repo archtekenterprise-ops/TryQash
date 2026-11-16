@@ -9,7 +9,7 @@
  */
 
 /** Account statuses defined by the database plan. */
-export type AccountStatus = "active" | "suspended" | "banned";
+export type AccountStatus = "pending" | "active" | "suspended" | "banned";
 
 /**
  * The current user's profile. Mirrors the plan's fields; full name and

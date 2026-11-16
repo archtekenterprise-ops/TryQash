@@ -16,15 +16,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
+import { useAccountAccess } from "@/contexts/account-access-context";
 import { useTranslation } from "@/i18n/context";
 import type { TranslationKey } from "@/i18n/dictionaries";
+import { canAccessArea } from "@/lib/account-permissions";
+import type { PlatformArea } from "@/lib/account-permissions";
 import { signOut } from "@/services/auth.service";
 
 interface NavItem {
   labelKey: TranslationKey;
   icon: LucideIcon;
   /** Present only when the destination is actually implemented. */
-  href?: string;
+  href: string;
+  area: PlatformArea;
   /** True when the destination exists in the app today. */
   implemented: boolean;
 }
@@ -43,19 +47,19 @@ const NAV_SECTIONS: NavSection[] = [
   {
     labelKey: "sidebar.menu",
     items: [
-      { labelKey: "nav.overview", icon: LayoutDashboard, href: "/dashboard", implemented: true },
-      { labelKey: "nav.surveys", icon: ClipboardList, implemented: false },
-      { labelKey: "nav.offerwalls", icon: Package, implemented: false },
-      { labelKey: "nav.affiliates", icon: Link2, implemented: false },
-      { labelKey: "nav.referrals", icon: Users, implemented: false },
-      { labelKey: "nav.earnings", icon: History, implemented: false },
+      { labelKey: "nav.overview", icon: LayoutDashboard, href: "/dashboard", area: "dashboard", implemented: true },
+      { labelKey: "nav.surveys", icon: ClipboardList, href: "/surveys", area: "surveys", implemented: true },
+      { labelKey: "nav.offerwalls", icon: Package, href: "/offerwalls", area: "offerwalls", implemented: true },
+      { labelKey: "nav.affiliates", icon: Link2, href: "/affiliate-programmes", area: "affiliates", implemented: true },
+      { labelKey: "nav.referrals", icon: Users, href: "/referrals", area: "referrals", implemented: true },
+      { labelKey: "nav.earnings", icon: History, href: "/earnings-history", area: "earningsHistory", implemented: true },
     ],
   },
   {
     labelKey: "sidebar.account",
     items: [
-      { labelKey: "nav.profile", icon: UserRound, implemented: false },
-      { labelKey: "nav.help", icon: CircleHelp, implemented: false },
+      { labelKey: "nav.profile", icon: UserRound, href: "/account", area: "profile", implemented: true },
+      { labelKey: "nav.help", icon: CircleHelp, href: "/help", area: "help", implemented: true },
     ],
   },
 ];
@@ -76,6 +80,7 @@ export interface SidebarProps {
  */
 export function Sidebar({ onNavigate }: SidebarProps) {
   const t = useTranslation();
+  const accountState = useAccountAccess();
   const pathname = usePathname();
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
@@ -123,9 +128,15 @@ export function Sidebar({ onNavigate }: SidebarProps) {
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
+                const allowed =
+                  !accountState || canAccessArea(accountState, item.area);
+                const linked = item.implemented && allowed;
+                const disabledLabel = item.implemented
+                  ? t("nav.restricted")
+                  : t("nav.soon");
                 return (
                   <li key={item.labelKey}>
-                    {item.implemented && item.href ? (
+                    {linked ? (
                       <Link
                         href={item.href}
                         onClick={onNavigate}
@@ -142,13 +153,13 @@ export function Sidebar({ onNavigate }: SidebarProps) {
                     ) : (
                       <span
                         aria-disabled="true"
-                        title={t("nav.soon")}
-                        className="flex cursor-not-allowed items-center gap-2.5 rounded-control px-2.5 py-1.5 text-sm font-medium text-muted/60"
+                        title={disabledLabel}
+                        className="flex cursor-not-allowed items-center gap-2.5 rounded-control px-2.5 py-1.5 text-sm font-medium text-muted/50"
                       >
                         <Icon aria-hidden="true" className="size-4 shrink-0" />
                         {t(item.labelKey)}
                         <span className="ml-auto text-[10px] font-medium uppercase tracking-wider text-subtle">
-                          {t("nav.soon")}
+                          {disabledLabel}
                         </span>
                       </span>
                     )}

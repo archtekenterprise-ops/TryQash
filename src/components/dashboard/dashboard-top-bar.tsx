@@ -135,20 +135,14 @@ export function DashboardTopBar({
               ) : null}
 
               <div className="p-1">
-                {/* Account settings: destination not implemented yet. */}
-                <button
-                  type="button"
+                <Link
+                  href="/account"
                   role="menuitem"
-                  disabled
-                  aria-disabled="true"
-                  title={t("nav.soon")}
-                  className="flex w-full cursor-not-allowed items-center justify-between gap-2 rounded-control px-2.5 py-1.5 text-left text-sm text-muted/60"
+                  onClick={() => setOpen(false)}
+                  className="flex w-full items-center gap-2 rounded-control px-2.5 py-1.5 text-left text-sm text-body transition-colors hover:bg-surface-subtle"
                 >
                   {t("dashboard.profileSettings")}
-                  <span className="text-[10px] font-medium uppercase tracking-wider text-subtle">
-                    {t("nav.soon")}
-                  </span>
-                </button>
+                </Link>
 
                 {canSignOut ? (
                   <button

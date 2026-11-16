@@ -270,7 +270,7 @@ Endpoints/data sources to define (none assumed):
 
 1. **Current user's profile** - `getCurrentUserProfile()`. Plan fields:
    `username`, `country` (char(2)), `referralCode`, `status`
-   (`active`/`suspended`/`banned`), timestamps. No full name, no phone.
+   (`pending`/`active`/`suspended`/`banned`), timestamps. No full name, no phone.
 2. **Earnings summary** - `getEarningsSummary()`. Requires the planned
    unified earnings ledger. Frontend uses minor-unit integers + ISO 4217
    currency. Any points balance and points-to-money conversion must be
@@ -299,5 +299,15 @@ Contract requirements:
 Auth integration point: `src/app/dashboard/page.tsx` does the session check
 (provider-neutral). Enforce role/status access server-side there and in
 RLS; the frontend hides UI only, which is not security.
+
+Account-aware routes also load the verified user's `profiles.status` through
+`src/lib/account-route-server.ts`. Unknown or missing status remains
+unavailable; it is never promoted to `active` by frontend state. A profile
+status of `active` is account standing, not proof of activation. The frontend
+requires both an active profile and backend-confirmed successful activation
+payment before showing activation as confirmed or allowing participation.
+The 3,150 FCFA fee is displayed, but payment status and initiation are not
+connected; activation cannot be started until the backend defines those
+payment contracts.
 
 ### Signing 

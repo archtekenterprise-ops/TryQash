@@ -46,6 +46,7 @@ export async function createServerSupabaseClient(): Promise<SupabaseClient> {
 export interface AuthenticatedUser {
   id: string;
   email: string | null;
+  emailVerified: boolean;
   accessToken: string | null;
 }
 
@@ -70,6 +71,7 @@ export async function getCurrentUser(): Promise<AuthenticatedUser | null> {
     return { 
       id: data.user.id, 
       email: data.user.email ?? null,
+      emailVerified: Boolean(data.user.email_confirmed_at),
       accessToken: sessionData.session?.access_token ?? null,
     };
   } catch {

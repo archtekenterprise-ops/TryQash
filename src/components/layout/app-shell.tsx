@@ -4,12 +4,15 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { AccountAccessProvider } from "@/contexts/account-access-context";
 import { useTranslation } from "@/i18n/context";
+import type { AccountAccessState } from "@/types/account";
 import { LanguageSwitcher } from "./language-switcher";
 import { Sidebar } from "./sidebar";
 
 export interface AppShellProps {
   children: ReactNode;
+  accountState?: AccountAccessState | null;
 }
 
 /**
@@ -20,7 +23,7 @@ export interface AppShellProps {
  * Mobile: the sidebar becomes a slide-over drawer opened from the slim top
  * bar, closed via the backdrop, the close button, Escape, or navigation.
  */
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ children, accountState = null }: AppShellProps) {
   const t = useTranslation();
   const [navOpen, setNavOpen] = useState(false);
 
@@ -38,66 +41,68 @@ export function AppShell({ children }: AppShellProps) {
   }, [navOpen]);
 
   return (
-    <div className="flex min-h-dvh">
-      {/* Desktop sidebar */}
-      <aside className="hidden w-60 shrink-0 border-r border-surface lg:block">
-        <div className="sticky top-0 h-dvh">
-          <Sidebar />
-        </div>
-      </aside>
+    <AccountAccessProvider state={accountState}>
+      <div className="flex min-h-dvh">
+        {/* Desktop sidebar */}
+        <aside className="hidden w-60 shrink-0 border-r border-surface lg:block">
+          <div className="sticky top-0 h-dvh">
+            <Sidebar />
+          </div>
+        </aside>
 
-      {/* Mobile navigation drawer */}
-      {navOpen ? (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Navigation"
-          className="fixed inset-0 z-50 lg:hidden"
-        >
+        {/* Mobile navigation drawer */}
+        {navOpen ? (
           <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-heading/40"
-            onClick={() => setNavOpen(false)}
-          />
-          <div className="shadow-overlay absolute inset-y-0 left-0 w-64 max-w-[85vw]">
-            <div className="relative h-full">
-              <Sidebar onNavigate={() => setNavOpen(false)} />
-              <button
-                type="button"
-                aria-label={t("nav.close")}
-                onClick={() => setNavOpen(false)}
-                className="absolute top-3 right-3 inline-flex size-8 items-center justify-center rounded-control text-muted transition-colors hover:bg-surface-subtle hover:text-heading"
-              >
-                <X aria-hidden="true" className="size-4" />
-              </button>
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation"
+            className="fixed inset-0 z-50 lg:hidden"
+          >
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 bg-heading/40"
+              onClick={() => setNavOpen(false)}
+            />
+            <div className="shadow-overlay absolute inset-y-0 left-0 w-64 max-w-[85vw]">
+              <div className="relative h-full">
+                <Sidebar onNavigate={() => setNavOpen(false)} />
+                <button
+                  type="button"
+                  aria-label={t("nav.close")}
+                  onClick={() => setNavOpen(false)}
+                  className="absolute top-3 right-3 inline-flex size-8 items-center justify-center rounded-control text-muted transition-colors hover:bg-surface-subtle hover:text-heading"
+                >
+                  <X aria-hidden="true" className="size-4" />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
 
-      {/* Main column */}
-      <div className="flex min-w-0 flex-1 flex-col">
-        {/* Slim mobile top bar (desktop pages use TopBar instead) */}
-        <div className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-surface bg-surface-page px-4 lg:hidden">
-          <button
-            type="button"
-            aria-label={t("nav.open")}
-            onClick={() => setNavOpen(true)}
-            className="inline-flex size-9 items-center justify-center rounded-control border border-surface-strong bg-surface-page text-body transition-colors hover:bg-surface-subtle"
-          >
-            <Menu aria-hidden="true" className="size-4" />
-          </button>
-          <Link
-            href="/dashboard"
-            className="rounded-control text-base font-semibold tracking-tight text-heading"
-          >
-            Referrago
-          </Link>
-          <LanguageSwitcher className="ml-auto" />
-        </div>
+        {/* Main column */}
+        <div className="flex min-w-0 flex-1 flex-col">
+          {/* Slim mobile top bar (desktop pages use TopBar instead) */}
+          <div className="sticky top-0 z-40 flex h-14 items-center gap-3 border-b border-surface bg-surface-page px-4 lg:hidden">
+            <button
+              type="button"
+              aria-label={t("nav.open")}
+              onClick={() => setNavOpen(true)}
+              className="inline-flex size-9 items-center justify-center rounded-control border border-surface-strong bg-surface-page text-body transition-colors hover:bg-surface-subtle"
+            >
+              <Menu aria-hidden="true" className="size-4" />
+            </button>
+            <Link
+              href="/dashboard"
+              className="rounded-control text-base font-semibold tracking-tight text-heading"
+            >
+              Referrago
+            </Link>
+            <LanguageSwitcher className="ml-auto" />
+          </div>
 
-        <main className="min-w-0 flex-1">{children}</main>
+          <main className="min-w-0 flex-1">{children}</main>
+        </div>
       </div>
-    </div>
+    </AccountAccessProvider>
   );
 }

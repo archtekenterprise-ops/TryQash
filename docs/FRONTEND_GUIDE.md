@@ -19,12 +19,20 @@ Current mapping:
 
 | URL                | File that renders it                     |
 | ------------------ | ---------------------------------------- |
-| `/`                | `src/app/page.tsx`                       |
+| `/`                | Redirects to `/login` (`next.config.ts`)  |
 | `/login`           | `src/app/login/page.tsx`                 |
 | `/register`        | `src/app/register/page.tsx`              |
 | `/forgot-password` | `src/app/forgot-password/page.tsx`       |
 | `/reset-password`  | `src/app/reset-password/page.tsx`        |
 | `/dashboard`       | `src/app/dashboard/page.tsx`             |
+| `/account`         | `src/app/account/page.tsx`               |
+| `/activate-account` | `src/app/activate-account/page.tsx`      |
+| `/affiliate-programmes` | `src/app/affiliate-programmes/page.tsx` |
+| `/earnings-history` | `src/app/earnings-history/page.tsx`      |
+| `/help`            | `src/app/help/page.tsx`                  |
+| `/offerwalls`      | `src/app/offerwalls/page.tsx`            |
+| `/referrals`       | `src/app/referrals/page.tsx`             |
+| `/surveys`         | `src/app/surveys/page.tsx`               |
 | `/auth/confirm`    | `src/app/auth/confirm/route.ts` (a Route Handler, not a page) |
 
 `src/app/layout.tsx` is the **root layout**: it wraps every page, loads
@@ -307,7 +315,7 @@ change language until the next full page load. For the tab title, call
 
 | Concern | File |
 | ------- | ---- |
-| Sidebar (grouped nav: Overview, Surveys, Offerwalls, Affiliate Programmes, Referrals, Earnings History, Profile & Settings, Help; active state, "soon" placeholders, sign out) | `src/components/layout/sidebar.tsx` |
+| Sidebar (grouped navigation with account-status restrictions and sign out) | `src/components/layout/sidebar.tsx` |
 | Top bar with title, greeting, profile menu, language switcher | `src/components/dashboard/dashboard-top-bar.tsx` |
 | Earnings cards (Total / Available / Pending) | `src/components/dashboard/earnings-cards.tsx` |
 | Ways to Earn (Surveys, Offerwalls, Affiliates, Referrals) | `src/components/dashboard/opportunities-section.tsx` |
@@ -326,6 +334,11 @@ Key ideas to copy:
   `src/services/mocks/dashboard.mock.ts`, behind `DASHBOARD_MOCK_ENABLED`.
   The UI marks it with a preview banner. To see states, open
   `/dashboard?preview=new-user` (also `no-financial`, `no-profile`, `error`).
+- **Account pages.** Account, activation, earnings history, help, and earning
+  service pages are separate routes. Access status is read server-side from
+  the signed-in user's `profiles.status`. The activation page displays the
+  3,150 FCFA fee; payment initiation and payment status remain unavailable
+  until a backend contract supplies them.
 
 ## 12. The six-digit code input (OTP)
 

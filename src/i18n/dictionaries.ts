@@ -149,6 +149,142 @@ const en = {
   "gettingStarted.step3": "Track the status of your earned rewards.",
   "gettingStarted.step4": "Explore affiliate opportunities or referrals when available.",
 
+  // ---- Sprint 2 account access ----
+  "nav.restricted": "Restricted",
+  "account.statusPending": "Pending",
+  "account.statusActive": "In good standing",
+  "account.activationStatus": "Activation status",
+  "account.activationConfirmed": "Activated",
+  "account.activationNotConfirmed": "Not confirmed",
+  "account.activationUnknownTitle": "Activation not confirmed",
+  "account.activationUnknownBody":
+    "The backend has not confirmed activation. A profile status of Active alone does not mean activation is complete.",
+  "account.statusSuspended": "Suspended",
+  "account.statusBanned": "Banned",
+  "account.pendingTitle": "Account activation required",
+  "account.pendingBody":
+    "You can explore Referrago now. Activate your account before participating in earning activities.",
+  "account.activeTitle": "Account active",
+  "account.activeBody":
+    "Your account is active. Earning activities become available as their services go live.",
+  "account.stateUnavailable": "Account status is currently unavailable.",
+  "restriction.suspendedTitle": "Account suspended",
+  "restriction.suspendedBody":
+    "Earning activities are unavailable while this account is suspended. Contact support for assistance.",
+  "restriction.bannedTitle": "Account restricted",
+  "restriction.bannedBody":
+    "This account cannot use restricted platform functionality. Contact support if you believe this is an error.",
+  "restriction.contactSupport": "Go to Help and Support",
+
+  // ---- Activation prompt and page ----
+  "activation.promptTitle": "Account Activation Required",
+  "activation.promptBody":
+    "Your account needs to be activated before you can participate in earning activities on Referrago. Confirmed activation details will appear here when the service is available.",
+  "activation.activateAccount": "Activate My Account",
+  "activation.continueBrowsing": "Continue Browsing",
+  "activation.metaTitle": "Account activation",
+  "activation.title": "Activate Your Referrago Account",
+  "activation.description":
+    "Unlock access to all earning opportunities on Referrago by activating your account. Your account remains Pending until the backend confirms activation.",
+  "activation.priceTitle": "Activation fee",
+  "activation.priceAmount": "3,150 FCFA",
+  "activation.priceOneTime": "One-time account activation fee.",
+  "activation.benefitsTitle": "What activation unlocks",
+  "activation.benefitSurveys": "Participate in paid surveys.",
+  "activation.benefitOfferwalls": "Access offerwall tasks.",
+  "activation.benefitAffiliates": "Participate in affiliate programmes.",
+  "activation.benefitReferrals": "Unlock referral earning activities.",
+  "activation.startPayment": "Begin activation payment",
+  "activation.integrationUnavailable":
+    "Activation is not available yet. We will show the confirmed details here when the service is connected.",
+  "activation.notStartedTitle": "Payment not started",
+  "activation.notStartedBody":
+    "Review the activation information before beginning when payment integration is available.",
+  "activation.pendingTitle": "Payment processing",
+  "activation.pendingBody":
+    "The payment is being processed. Your account is still Pending until the backend confirms activation.",
+  "activation.checkStatus": "Check payment status",
+  "activation.failedTitle": "Payment unsuccessful",
+  "activation.failedBody":
+    "The payment was not completed. Retry only when the backend confirms that another attempt is allowed.",
+  "activation.cancelledTitle": "Payment cancelled",
+  "activation.cancelledBody":
+    "The payment was cancelled. You can return here and retry when the integration allows it.",
+  "activation.retryPayment": "Retry payment",
+  "activation.successTitle": "Activation confirmed",
+  "activation.successBody":
+    "The backend has confirmed payment and returned an Active account status. Earning activities are now unlocked where available.",
+  "activation.paymentOnlyTitle": "Payment successful - confirmation pending",
+  "activation.paymentOnlyBody":
+    "The payment is marked successful, but your account remains Pending. Access unlocks only after the backend returns an Active account status.",
+  "activation.returnDashboard": "Return to dashboard",
+  "activation.refreshAccount": "Refresh account status",
+  "activation.backendUnavailable": "Backend status refresh is not connected yet.",
+  "activation.previewTitle": "Development state controls",
+
+  // ---- Earning service exploration ----
+  "service.previewNotice":
+    "Informational preview only. No provider or earning integration is connected.",
+  "service.howItWorks": "How it works",
+  "service.opportunities": "Available opportunities",
+  "service.noneTitle": "No live opportunities yet",
+  "service.noneBody":
+    "Opportunities will appear here when the backend and provider integration are ready.",
+  "service.activeUnavailable":
+    "Your account can participate, but this earning service is not integrated yet.",
+  "service.actionPendingHint":
+    "Explore freely. Starting an earning activity requires account activation.",
+  "service.actionActiveHint":
+    "Your account is active. Actions become usable when this service is integrated.",
+  "service.surveys.title": "Surveys",
+  "service.surveys.description":
+    "Browse short surveys and learn how eligible responses may earn points or rewards.",
+  "service.surveys.step1": "Review the survey topic and eligibility requirements.",
+  "service.surveys.step2": "Start only after your account is active and the survey provider is connected.",
+  "service.surveys.step3": "Track provider validation in Recent Activity.",
+  "service.surveys.action": "Start survey",
+  "service.offerwalls.title": "Offerwalls",
+  "service.offerwalls.description":
+    "Explore task-based earning services, such as eligible app trials or service signups.",
+  "service.offerwalls.step1": "Review each task's eligibility and instructions.",
+  "service.offerwalls.step2": "Launch tasks only after activation and provider integration.",
+  "service.offerwalls.step3": "Pending rewards stay subject to provider confirmation.",
+  "service.offerwalls.action": "Start task",
+  "service.affiliates.title": "Affiliate Programmes",
+  "service.affiliates.description":
+    "Learn how eligible product or service links may earn commissions from qualifying actions.",
+  "service.affiliates.step1": "Review approved programme terms before sharing links.",
+  "service.affiliates.step2": "Access earning links only after activation and integration.",
+  "service.affiliates.step3": "Commissions remain subject to backend and provider validation.",
+  "service.affiliates.action": "Access affiliate action",
+  "service.referrals.title": "Referrals",
+  "service.referrals.description":
+    "View referral information and learn how invitations may earn rewards under the final rules.",
+  "service.referrals.step1": "Review your referral code and programme information.",
+  "service.referrals.step2": "Generate reward links only after account activation.",
+  "service.referrals.step3": "Referral rewards and levels are confirmed by the backend.",
+  "service.referrals.action": "Generate referral link",
+
+  // ---- Account and help ----
+  "accountPage.metaTitle": "Profile and Settings",
+  "accountPage.title": "Profile and Settings",
+  "accountPage.description": "View permitted account information.",
+  "accountPage.username": "Username",
+  "accountPage.country": "Country",
+  "accountPage.status": "Account status",
+  "accountPage.referralCode": "Referral code",
+  "accountPage.missing": "Not available",
+  "accountPage.editingSoon": "Profile editing will be added after the backend policy is confirmed.",
+  "help.metaTitle": "Help and Support",
+  "help.title": "Help and Support",
+  "help.description": "Find guidance about account access and platform services.",
+  "help.body":
+    "A backend support channel has not been connected yet. This page is the approved support destination for restricted accounts.",
+
+  "earningsHistory.title": "Earnings History",
+  "earningsHistory.description":
+    "Review earning activity recorded across Referrago services. Final ledger data will come from the backend.",
+
   // ---- Login ----
   "login.metaTitle": "Sign in",
   "login.metaDescription": "Sign in to your Referrago account.",
@@ -533,6 +669,142 @@ const fr: Record<TranslationKey, string> = {
   "gettingStarted.step2": "Accomplissez une tache ou un sondage admissible.",
   "gettingStarted.step3": "Suivez le statut de vos recompenses gagnees.",
   "gettingStarted.step4": "Explorez les programmes d'affiliation ou le parrainage quand ils seront disponibles.",
+
+  // ---- Sprint 2 account access ----
+  "nav.restricted": "Restreint",
+  "account.statusPending": "En attente",
+  "account.statusActive": "En regle",
+  "account.activationStatus": "Statut d'activation",
+  "account.activationConfirmed": "Active",
+  "account.activationNotConfirmed": "Non confirme",
+  "account.activationUnknownTitle": "Activation non confirmee",
+  "account.activationUnknownBody":
+    "Le backend n'a pas confirme l'activation. Un statut de profil Actif ne signifie pas que l'activation est terminee.",
+  "account.statusSuspended": "Suspendu",
+  "account.statusBanned": "Bloque",
+  "account.pendingTitle": "Activation du compte requise",
+  "account.pendingBody":
+    "Vous pouvez explorer Referrago. Activez votre compte avant de participer aux activites de gain.",
+  "account.activeTitle": "Compte actif",
+  "account.activeBody":
+    "Votre compte est actif. Les activites deviennent disponibles au fur et a mesure des integrations.",
+  "account.stateUnavailable": "Le statut du compte est actuellement indisponible.",
+  "restriction.suspendedTitle": "Compte suspendu",
+  "restriction.suspendedBody":
+    "Les activites de gain sont indisponibles pendant la suspension. Contactez l'assistance.",
+  "restriction.bannedTitle": "Compte restreint",
+  "restriction.bannedBody":
+    "Ce compte ne peut pas utiliser les fonctions restreintes. Contactez l'assistance si vous pensez qu'il s'agit d'une erreur.",
+  "restriction.contactSupport": "Acceder a l'aide et assistance",
+
+  // ---- Activation prompt and page ----
+  "activation.promptTitle": "Activation du compte requise",
+  "activation.promptBody":
+    "Votre compte doit etre active avant de pouvoir participer aux activites de gain sur Referrago. Les details confirmes apparaitront ici lorsque le service sera disponible.",
+  "activation.activateAccount": "Activer mon compte",
+  "activation.continueBrowsing": "Continuer a explorer",
+  "activation.metaTitle": "Activation du compte",
+  "activation.title": "Activez votre compte Referrago",
+  "activation.description":
+    "Debloquez l'acces a toutes les opportunites de gain sur Referrago en activant votre compte. Le compte reste En attente jusqu'a confirmation par le backend.",
+  "activation.priceTitle": "Frais d'activation",
+  "activation.priceAmount": "3 150 FCFA",
+  "activation.priceOneTime": "Frais d'activation unique du compte.",
+  "activation.benefitsTitle": "Ce que l'activation debloque",
+  "activation.benefitSurveys": "Participer aux sondages remuneres.",
+  "activation.benefitOfferwalls": "Acceder aux taches du mur d'offres.",
+  "activation.benefitAffiliates": "Participer aux programmes d'affiliation.",
+  "activation.benefitReferrals": "Debloquer les activites de parrainage.",
+  "activation.startPayment": "Commencer le paiement d'activation",
+  "activation.integrationUnavailable":
+    "L'activation n'est pas encore disponible. Les details confirmes apparaitront ici lorsque le service sera connecte.",
+  "activation.notStartedTitle": "Paiement non commence",
+  "activation.notStartedBody":
+    "Consultez les informations d'activation avant de commencer quand l'integration sera disponible.",
+  "activation.pendingTitle": "Paiement en cours",
+  "activation.pendingBody":
+    "Le paiement est en cours. Votre compte reste En attente jusqu'a confirmation du backend.",
+  "activation.checkStatus": "Verifier le statut du paiement",
+  "activation.failedTitle": "Paiement echoue",
+  "activation.failedBody":
+    "Le paiement n'a pas abouti. Reessayez seulement si le backend autorise une nouvelle tentative.",
+  "activation.cancelledTitle": "Paiement annule",
+  "activation.cancelledBody":
+    "Le paiement a ete annule. Vous pourrez reessayer lorsque l'integration le permettra.",
+  "activation.retryPayment": "Reessayer le paiement",
+  "activation.successTitle": "Activation confirmee",
+  "activation.successBody":
+    "Le backend a confirme le paiement et retourne un statut Actif. Les activites disponibles sont deverrouillees.",
+  "activation.paymentOnlyTitle": "Paiement reussi - confirmation en attente",
+  "activation.paymentOnlyBody":
+    "Le paiement est reussi, mais le compte reste En attente. L'acces est ouvert uniquement apres un statut Actif du backend.",
+  "activation.returnDashboard": "Retour au tableau de bord",
+  "activation.refreshAccount": "Actualiser le statut du compte",
+  "activation.backendUnavailable": "L'actualisation backend n'est pas encore connectee.",
+  "activation.previewTitle": "Controles d'etat de developpement",
+
+  // ---- Earning service exploration ----
+  "service.previewNotice":
+    "Apercu informatif uniquement. Aucun fournisseur ni service de gain n'est connecte.",
+  "service.howItWorks": "Fonctionnement",
+  "service.opportunities": "Opportunites disponibles",
+  "service.noneTitle": "Aucune opportunite active pour le moment",
+  "service.noneBody":
+    "Les opportunites apparaitront ici quand le backend et le fournisseur seront prets.",
+  "service.activeUnavailable":
+    "Votre compte peut participer, mais ce service de gain n'est pas encore integre.",
+  "service.actionPendingHint":
+    "Explorez librement. Commencer une activite requiert l'activation du compte.",
+  "service.actionActiveHint":
+    "Votre compte est actif. Les actions seront utilisables apres integration du service.",
+  "service.surveys.title": "Sondages",
+  "service.surveys.description":
+    "Parcourez de courts sondages et decouvrez comment des reponses admissibles peuvent rapporter des recompenses.",
+  "service.surveys.step1": "Consultez le sujet et les criteres d'admissibilite.",
+  "service.surveys.step2": "Commencez uniquement apres activation et integration du fournisseur.",
+  "service.surveys.step3": "Suivez la validation dans l'activite recente.",
+  "service.surveys.action": "Commencer le sondage",
+  "service.offerwalls.title": "Mur d'offres",
+  "service.offerwalls.description":
+    "Explorez les services de taches, comme les essais d'applications ou les inscriptions admissibles.",
+  "service.offerwalls.step1": "Consultez les criteres et instructions de chaque tache.",
+  "service.offerwalls.step2": "Lancez les taches seulement apres activation et integration.",
+  "service.offerwalls.step3": "Les recompenses restent soumises a confirmation du fournisseur.",
+  "service.offerwalls.action": "Commencer la tache",
+  "service.affiliates.title": "Programmes d'affiliation",
+  "service.affiliates.description":
+    "Decouvrez comment des liens admissibles peuvent generer des commissions sur des actions qualifiees.",
+  "service.affiliates.step1": "Consultez les conditions approuvees avant de partager des liens.",
+  "service.affiliates.step2": "Accedez aux liens seulement apres activation et integration.",
+  "service.affiliates.step3": "Les commissions restent soumises a validation du backend et du fournisseur.",
+  "service.affiliates.action": "Acceder a l'action d'affiliation",
+  "service.referrals.title": "Parrainages",
+  "service.referrals.description":
+    "Consultez les informations et apprenez comment les invitations peuvent generer des recompenses.",
+  "service.referrals.step1": "Consultez votre code et les informations du programme.",
+  "service.referrals.step2": "Generez des liens de recompense uniquement apres activation.",
+  "service.referrals.step3": "Les recompenses et niveaux sont confirmes par le backend.",
+  "service.referrals.action": "Generer le lien de parrainage",
+
+  // ---- Account and help ----
+  "accountPage.metaTitle": "Profil et parametres",
+  "accountPage.title": "Profil et parametres",
+  "accountPage.description": "Consultez les informations de compte autorisees.",
+  "accountPage.username": "Nom d'utilisateur",
+  "accountPage.country": "Pays",
+  "accountPage.status": "Statut du compte",
+  "accountPage.referralCode": "Code de parrainage",
+  "accountPage.missing": "Indisponible",
+  "accountPage.editingSoon": "La modification sera ajoutee apres confirmation de la politique backend.",
+  "help.metaTitle": "Aide et assistance",
+  "help.title": "Aide et assistance",
+  "help.description": "Conseils concernant l'acces au compte et les services.",
+  "help.body":
+    "Aucun canal d'assistance backend n'est encore connecte. Cette page est la destination approuvee pour les comptes restreints.",
+
+  "earningsHistory.title": "Historique des gains",
+  "earningsHistory.description":
+    "Consultez les activites de gain enregistrees sur Referrago. Les donnees finales viendront du backend.",
 
   // ---- Login ----
   "login.metaTitle": "Connexion",
