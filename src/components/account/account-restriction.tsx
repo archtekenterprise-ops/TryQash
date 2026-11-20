@@ -2,9 +2,11 @@
 
 import { Ban, CircleAlert } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { buttonClasses } from "@/components/ui/button";
 import { useTranslation } from "@/i18n/context";
+import { preserveAccountPreviewParams } from "@/lib/account-preview";
 import type { AccountStatus } from "@/types/account";
 
 /**
@@ -18,6 +20,7 @@ export function AccountRestriction({
   status: Extract<AccountStatus, "suspended" | "banned">;
 }) {
   const t = useTranslation();
+  const searchParams = useSearchParams();
   const banned = status === "banned";
   const Icon = banned ? Ban : CircleAlert;
 
@@ -41,7 +44,7 @@ export function AccountRestriction({
         </p>
         <div className="mt-6 flex justify-center">
           <Link
-            href="/help"
+            href={preserveAccountPreviewParams("/help", searchParams)}
             className={buttonClasses({ variant: "secondary" })}
           >
             {t("restriction.contactSupport")}

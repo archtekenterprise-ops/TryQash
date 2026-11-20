@@ -94,11 +94,7 @@ export function canBrowseEarningServices(state: AccountAccessState): boolean {
 export function canParticipateInEarningActivities(
   state: AccountAccessState,
 ): boolean {
-  return (
-    state.emailVerified &&
-    state.accountStatus === "active" &&
-    state.activationPaymentStatus === "successful"
-  );
+  return state.emailVerified && state.accountStatus === "active";
 }
 
 export type ParticipationOutcome =
@@ -112,15 +108,8 @@ export function getParticipationOutcome(
   state: AccountAccessState,
 ): ParticipationOutcome {
   if (!state.emailVerified) return "verify-email";
-  if (
-    state.accountStatus === "active" &&
-    state.activationPaymentStatus === "successful"
-  ) {
-    return "allowed";
-  }
-  if (state.accountStatus === "pending" || state.accountStatus === "active") {
-    return "activation-required";
-  }
+  if (state.accountStatus === "active") return "allowed";
+  if (state.accountStatus === "pending") return "activation-required";
   return "restricted";
 }
 

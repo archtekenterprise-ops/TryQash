@@ -9,19 +9,28 @@ import type { Locale } from "@/i18n/config";
 const intlLocale = (locale: Locale): string =>
   locale === "fr" ? "fr-FR" : "en-US";
 
+function currencyFractionDigits(currency: string, locale: Locale): number {
+  return new Intl.NumberFormat(intlLocale(locale), {
+    style: "currency",
+    currency,
+  }).resolvedOptions().maximumFractionDigits ?? 2;
+}
+
 /**
- * Formats an integer amount in minor units (cents) as a currency string,
- * e.g. 482050 with "USD" and "en" -> "$4,820.50".
+ * Formats an integer amount in the currency's minor unit as a currency
+ * string, e.g. 482050 USD -> "$4,820.50" or 3500 XAF -> "3,500 FCFA".
  */
 export function formatMoney(
   minorUnits: number,
   currency: string,
   locale: Locale,
 ): string {
+  const digits = currencyFractionDigits(currency, locale);
+  const value = minorUnits / 10 ** digits;
   return new Intl.NumberFormat(intlLocale(locale), {
     style: "currency",
     currency,
-  }).format(minorUnits / 100);
+  }).format(value);
 }
 
 /** Formats a minor-unit amount with an explicit sign, e.g. "+$250.00". */

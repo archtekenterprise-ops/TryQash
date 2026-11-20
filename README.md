@@ -65,13 +65,21 @@ npm run start      # serve the production build
 
 | Route               | File                                        | Purpose |
 | ------------------- | ------------------------------------------- | ------- |
-| `/`                 | `src/app/page.tsx`                          | Design-system preview (temporary, placeholder content only). |
+| `/`                 | `next.config.ts`                             | Redirects to `/login`. |
 | `/login`            | `src/app/login/page.tsx`                    | Sign in with email or username + password (show/hide password, validation, links). |
 | `/register`         | `src/app/register/page.tsx`                 | Registration per the database plan: email, username, country (2-letter code), password, optional referral code. |
 | `/forgot-password`  | `src/app/forgot-password/page.tsx`          | Request a recovery email; includes the confirmation state. |
 | `/reset-password`   | `src/app/reset-password/page.tsx`           | Set a new password; handles invalid/expired links. |
 | `/verify-email`     | `src/app/verify-email/page.tsx`             | Email verification: six-digit code input, resend with cooldown, success/expired states. |
-| `/dashboard`        | `src/app/dashboard/page.tsx`                | Main user dashboard: overview cards, quick actions, recent transactions. Session-gated once auth is connected. |
+| `/dashboard`        | `src/app/dashboard/page.tsx`                | Main user dashboard: overview cards, quick actions, and recent activity. |
+| `/surveys`          | `src/app/surveys/page.tsx`                  | Survey information and participation action. |
+| `/offerwalls`       | `src/app/offerwalls/page.tsx`               | Offerwall information and participation action. |
+| `/affiliate-programmes` | `src/app/affiliate-programmes/page.tsx` | Affiliate information and participation action. |
+| `/referrals`        | `src/app/referrals/page.tsx`                | Referral information and participation action. |
+| `/earnings-history` | `src/app/earnings-history/page.tsx`         | Read-only earning activity history. |
+| `/activate-account` | `src/app/activate-account/page.tsx`         | Account activation information and payment states. |
+| `/account`          | `src/app/account/page.tsx`                  | Profile and account information. |
+| `/help`             | `src/app/help/page.tsx`                      | Support information. |
 | `/auth/confirm`     | `src/app/auth/confirm/route.ts`             | Supabase email-link code exchange (provider plumbing, not a business API). |
 | `/api/health`       | `src/app/api/health/route.ts`               | Platform scaffold health check. |
 
@@ -81,7 +89,6 @@ npm run start      # serve the production build
 src/
   app/                    App Router pages and layouts (routes table above).
     globals.css           Design tokens (@theme) + global focus-visible rule.
-    fonts/                Vendored Inter woff2 (400/500/600/700).
   components/
     auth/                 AuthPageShell, AuthPage, PasswordInput, login/register/
                           forgot/reset forms, VerifyEmailPage, SignOutButton.

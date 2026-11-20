@@ -9,8 +9,6 @@ import { NotificationBanner } from "@/components/ui/notification-banner";
 import { buttonClasses } from "@/components/ui/button";
 import { DashboardTopBar } from "@/components/dashboard/dashboard-top-bar";
 import { MockStatePicker } from "@/components/dashboard/mock-state-picker";
-import { AccountRestriction } from "@/components/account/account-restriction";
-import { AccountStatusBanner } from "@/components/account/account-status-banner";
 import { ActivitySection } from "@/components/dashboard/activity-section";
 import { EarningsCards } from "@/components/dashboard/earnings-cards";
 import { GettingStartedSection } from "@/components/dashboard/getting-started-section";
@@ -18,7 +16,6 @@ import { OpportunitiesSection } from "@/components/dashboard/opportunities-secti
 import { ReferralCard } from "@/components/dashboard/referral-card";
 import { formatTitle } from "@/i18n/config";
 import { useDocumentTitle, useTranslation } from "@/i18n/context";
-import type { AccountAccessState } from "@/types/account";
 import { DASHBOARD_MOCK_ENABLED } from "@/services/mocks/dashboard.mock";
 import type { DashboardDataResult } from "@/types/dashboard";
 
@@ -29,29 +26,18 @@ export interface DashboardViewProps {
   configured: boolean;
   /** Signed-in user's session email when one exists, else null. */
   email: string | null;
-  /** Verified account status, or null when the account profile is unavailable. */
-  accountState: AccountAccessState | null;
 }
 
 /** The three result states looked after individually for readability. */
 function DashboardContent({
   result,
   email,
-  accountState,
 }: {
   result: DashboardDataResult;
   email: string | null;
-  accountState: AccountAccessState | null;
 }) {
   const t = useTranslation();
   const router = useRouter();
-
-  if (
-    accountState?.accountStatus === "suspended" ||
-    accountState?.accountStatus === "banned"
-  ) {
-    return <AccountRestriction status={accountState.accountStatus} />;
-  }
 
   if (result.status === "not-connected") {
     return (
@@ -156,7 +142,6 @@ export function DashboardView({
   result,
   configured,
   email,
-  accountState,
 }: DashboardViewProps) {
   const t = useTranslation();
   useDocumentTitle(formatTitle(t("dashboard.metaTitle")));
@@ -168,12 +153,9 @@ export function DashboardView({
     result.status === "ok" && displayName
       ? t("dashboard.greeting", { name: displayName })
       : undefined;
-  const restricted =
-    accountState?.accountStatus === "suspended" ||
-    accountState?.accountStatus === "banned";
 
   return (
-    <AppShell accountState={accountState}>
+    <AppShell>
       <DashboardTopBar
         title={t("dashboard.title")}
         greeting={greeting}
@@ -183,12 +165,6 @@ export function DashboardView({
       />
 
       <Container className="py-8">
-        {accountState && !restricted ? (
-          <div className="mb-6">
-            <AccountStatusBanner state={accountState} />
-          </div>
-        ) : null}
-
         {/* Note while no auth provider is wired yet. */}
         {!configured ? (
           <div className="mb-6">
@@ -216,11 +192,7 @@ export function DashboardView({
           </div>
         ) : null}
 
-        <DashboardContent
-          result={result}
-          email={email}
-          accountState={accountState}
-        />
+        <DashboardContent result={result} email={email} />
       </Container>
     </AppShell>
   );

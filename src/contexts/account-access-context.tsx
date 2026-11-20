@@ -24,7 +24,7 @@ export function AccountAccessProvider({
   );
 }
 
-/** Null when no verified account snapshot is available. */
+/** null only on the design-system preview, which has no authenticated user. */
 export function useAccountAccess(): AccountAccessState | null {
   return useContext(AccountAccessContext);
 }

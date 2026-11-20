@@ -3,8 +3,10 @@
 import { ClipboardList, Link2, Package, Rocket, Users } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { useTranslation } from "@/i18n/context";
+import { preserveAccountPreviewParams } from "@/lib/account-preview";
 import type { TranslationKey } from "@/i18n/dictionaries";
 import type { EarningOpportunity, EarningOpportunityId } from "@/types/dashboard";
 
@@ -90,6 +92,7 @@ export interface OpportunitiesSectionProps {
 
 export function OpportunitiesSection({ opportunities }: OpportunitiesSectionProps) {
   const t = useTranslation();
+  const searchParams = useSearchParams();
   const statusById = new Map(opportunities.map((o) => [o.id, o.status]));
 
   return (
@@ -142,17 +145,18 @@ export function OpportunitiesSection({ opportunities }: OpportunitiesSectionProp
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   <Link
-                    href={opportunity.href}
+                    href={preserveAccountPreviewParams(
+                      opportunity.href,
+                      searchParams,
+                    )}
                     className={`button-press inline-flex h-8 items-center rounded-control px-3 text-xs font-semibold ${opportunity.accent.cta}`}
                   >
                     {t(opportunity.actionKey)}
                   </Link>
                   {!available ? (
-                    <>
-                      <span className="text-[10px] font-medium uppercase tracking-wider text-subtle">
-                        {t("opp.comingSoon")}
-                      </span>
-                    </>
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-subtle">
+                      {t("opp.comingSoon")}
+                    </span>
                   ) : null}
                 </div>
               </Card>

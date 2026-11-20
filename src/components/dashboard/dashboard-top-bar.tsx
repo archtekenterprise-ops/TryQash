@@ -2,13 +2,14 @@
 
 import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
 import { Spinner } from "@/components/ui/spinner";
 import { useTranslation } from "@/i18n/context";
 import { initialsFromUsername } from "@/lib/format";
 import { signOut } from "@/services/auth.service";
+import { preserveAccountPreviewParams } from "@/lib/account-preview";
 
 export interface DashboardTopBarProps {
   /** Page title, e.g. "Dashboard". */
@@ -25,7 +26,7 @@ export interface DashboardTopBarProps {
 /**
  * Dashboard top bar: page title, an optional greeting, the language
  * switcher, and a profile menu (avatar trigger) with account settings
- * (placeholder, disabled) and sign-out. The menu closes on outside click
+ * and sign-out. The menu closes on outside click
  * or Escape and is keyboard reachable. No notifications are added: none
  * have been specified.
  */
@@ -38,6 +39,7 @@ export function DashboardTopBar({
 }: DashboardTopBarProps) {
   const t = useTranslation();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [open, setOpen] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -136,11 +138,12 @@ export function DashboardTopBar({
 
               <div className="p-1">
                 <Link
-                  href="/account"
+                  href={preserveAccountPreviewParams("/account", searchParams)}
                   role="menuitem"
                   onClick={() => setOpen(false)}
                   className="flex w-full items-center gap-2 rounded-control px-2.5 py-1.5 text-left text-sm text-body transition-colors hover:bg-surface-subtle"
                 >
+                  <UserRound aria-hidden="true" className="size-4 shrink-0" />
                   {t("dashboard.profileSettings")}
                 </Link>
 

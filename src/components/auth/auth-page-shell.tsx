@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "@/components/layout/language-switcher";
@@ -37,9 +38,16 @@ export function AuthPageShell({
           <div className="text-center">
             <Link
               href="/"
-              className="rounded-control text-lg font-semibold tracking-tight text-heading"
+              className="inline-flex rounded-control"
             >
-              Referrago
+              <Image
+                src="/referrago-logo.png"
+                alt="Referrago"
+                width={690}
+                height={160}
+                priority
+                className="mx-auto h-9 w-auto"
+              />
             </Link>
           </div>
 
