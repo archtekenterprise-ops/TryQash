@@ -77,21 +77,21 @@ export function EarningServicePage({
   accountState,
 }: {
   kind: EarningServiceKind;
-  accountState: AccountAccessState | null;
+  accountState: AccountAccessState;
 }) {
   const t = useTranslation();
   const searchParams = useSearchParams();
   const directAction = searchParams.get("action") === "participate";
   const [activeUnavailable, setActiveUnavailable] = useState(
-    () => directAction && accountState?.accountStatus === "active",
+    () => directAction && accountState.accountStatus === "active",
   );
   const spec = SERVICE_SPECS[kind];
   const Icon = spec.icon;
   const activeAction = useCallback(() => setActiveUnavailable(true), []);
 
   const restricted =
-    accountState?.accountStatus === "suspended" ||
-    accountState?.accountStatus === "banned";
+    accountState.accountStatus === "suspended" ||
+    accountState.accountStatus === "banned";
 
   return (
     <AppShell accountState={accountState}>
@@ -99,20 +99,14 @@ export function EarningServicePage({
         title={t(spec.titleKey)}
         username={null}
         email={null}
-        canSignOut={Boolean(accountState)}
+        canSignOut={true}
       />
       <Container className="py-8">
-        {restricted && accountState ? (
+        {restricted ? (
           <AccountRestriction status={accountState.accountStatus as "suspended" | "banned"} />
         ) : (
           <div className="space-y-6">
-            {accountState ? (
-              <AccountStatusBanner state={accountState} />
-            ) : (
-              <NotificationBanner tone="info">
-                {t("account.stateUnavailable")}
-              </NotificationBanner>
-            )}
+            <AccountStatusBanner state={accountState} />
 
             <PageHeader
               eyebrow="Referrago"
@@ -166,12 +160,9 @@ export function EarningServicePage({
                   </div>
                   <p className="mt-3 text-xs text-subtle">
                     {t(
-                      accountState?.accountStatus === "active" &&
-                      accountState.activationPaymentStatus === "successful"
+                      accountState.accountStatus === "active"
                         ? "service.actionActiveHint"
-                        : accountState
-                          ? "service.actionPendingHint"
-                          : "account.stateUnavailable",
+                        : "service.actionPendingHint",
                     )}
                   </p>
                 </div>

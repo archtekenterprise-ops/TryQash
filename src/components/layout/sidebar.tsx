@@ -12,23 +12,24 @@ import {
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Spinner } from "@/components/ui/spinner";
 import { useAccountAccess } from "@/contexts/account-access-context";
 import { useTranslation } from "@/i18n/context";
 import type { TranslationKey } from "@/i18n/dictionaries";
-import { canAccessArea } from "@/lib/account-permissions";
-import type { PlatformArea } from "@/lib/account-permissions";
+import { canAccessArea, type PlatformArea } from "@/lib/account-permissions";
+import { preserveAccountPreviewParams } from "@/lib/account-preview";
 import { signOut } from "@/services/auth.service";
 
 interface NavItem {
   labelKey: TranslationKey;
   icon: LucideIcon;
-  /** Present only when the destination is actually implemented. */
-  href: string;
   area: PlatformArea;
+  /** Present only when the destination is actually implemented. */
+  href?: string;
   /** True when the destination exists in the app today. */
   implemented: boolean;
 }
@@ -47,19 +48,19 @@ const NAV_SECTIONS: NavSection[] = [
   {
     labelKey: "sidebar.menu",
     items: [
-      { labelKey: "nav.overview", icon: LayoutDashboard, href: "/dashboard", area: "dashboard", implemented: true },
-      { labelKey: "nav.surveys", icon: ClipboardList, href: "/surveys", area: "surveys", implemented: true },
-      { labelKey: "nav.offerwalls", icon: Package, href: "/offerwalls", area: "offerwalls", implemented: true },
-      { labelKey: "nav.affiliates", icon: Link2, href: "/affiliate-programmes", area: "affiliates", implemented: true },
-      { labelKey: "nav.referrals", icon: Users, href: "/referrals", area: "referrals", implemented: true },
-      { labelKey: "nav.earnings", icon: History, href: "/earnings-history", area: "earningsHistory", implemented: true },
+      { labelKey: "nav.overview", icon: LayoutDashboard, area: "dashboard", href: "/dashboard", implemented: true },
+      { labelKey: "nav.surveys", icon: ClipboardList, area: "surveys", href: "/surveys", implemented: true },
+      { labelKey: "nav.offerwalls", icon: Package, area: "offerwalls", href: "/offerwalls", implemented: true },
+      { labelKey: "nav.affiliates", icon: Link2, area: "affiliates", href: "/affiliate-programmes", implemented: true },
+      { labelKey: "nav.referrals", icon: Users, area: "referrals", href: "/referrals", implemented: true },
+      { labelKey: "nav.earnings", icon: History, area: "earningsHistory", href: "/earnings-history", implemented: true },
     ],
   },
   {
     labelKey: "sidebar.account",
     items: [
-      { labelKey: "nav.profile", icon: UserRound, href: "/account", area: "profile", implemented: true },
-      { labelKey: "nav.help", icon: CircleHelp, href: "/help", area: "help", implemented: true },
+      { labelKey: "nav.profile", icon: UserRound, area: "profile", href: "/account", implemented: true },
+      { labelKey: "nav.help", icon: CircleHelp, area: "help", href: "/help", implemented: true },
     ],
   },
 ];
@@ -80,8 +81,9 @@ export interface SidebarProps {
  */
 export function Sidebar({ onNavigate }: SidebarProps) {
   const t = useTranslation();
-  const accountState = useAccountAccess();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const accountState = useAccountAccess();
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
   const [signOutFailed, setSignOutFailed] = useState(false);
@@ -112,9 +114,15 @@ export function Sidebar({ onNavigate }: SidebarProps) {
       <div className="flex h-14 shrink-0 items-center border-b border-surface px-4">
         <Link
           href="/dashboard"
-          className="rounded-control text-base font-semibold tracking-tight text-heading"
+          className="inline-flex rounded-control"
         >
-          Referrago
+          <Image
+            src="/referrago-logo.png"
+            alt="Referrago"
+            width={690}
+            height={160}
+            className="h-7 w-auto"
+          />
         </Link>
       </div>
 
@@ -130,15 +138,18 @@ export function Sidebar({ onNavigate }: SidebarProps) {
                 const active = isActive(item.href);
                 const allowed =
                   !accountState || canAccessArea(accountState, item.area);
-                const linked = item.implemented && allowed;
+                const linked = item.implemented && item.href && allowed;
                 const disabledLabel = item.implemented
                   ? t("nav.restricted")
                   : t("nav.soon");
                 return (
                   <li key={item.labelKey}>
-                    {linked ? (
+                    {linked && item.href ? (
                       <Link
-                        href={item.href}
+                        href={preserveAccountPreviewParams(
+                          item.href,
+                          searchParams,
+                        )}
                         onClick={onNavigate}
                         aria-current={active ? "page" : undefined}
                         className={

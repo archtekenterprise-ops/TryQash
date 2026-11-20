@@ -16,8 +16,7 @@ export type AuthErrorField =
   | "email"
   | "password"
   | "username"
-  | "referralCode"
-  | "identifier";
+  | "referralCode";
 
 export interface AuthError {
   /** Machine-readable category. NOT_CONFIGURED means env vars are missing. */
@@ -40,15 +39,6 @@ export type AuthResult = { ok: true } | { ok: false; error: AuthError };
 
 export interface AuthCredentials {
   email: string;
-  password: string;
-}
-
-/**
- * Sign-in payload. The identifier may be an email address or a username;
- * the service classifies it (see src/lib/identifier.ts).
- */
-export interface LoginCredentials {
-  identifier: string;
   password: string;
 }
 

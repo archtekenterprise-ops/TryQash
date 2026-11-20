@@ -152,13 +152,7 @@ const en = {
   // ---- Sprint 2 account access ----
   "nav.restricted": "Restricted",
   "account.statusPending": "Pending",
-  "account.statusActive": "In good standing",
-  "account.activationStatus": "Activation status",
-  "account.activationConfirmed": "Activated",
-  "account.activationNotConfirmed": "Not confirmed",
-  "account.activationUnknownTitle": "Activation not confirmed",
-  "account.activationUnknownBody":
-    "The backend has not confirmed activation. A profile status of Active alone does not mean activation is complete.",
+  "account.statusActive": "Active",
   "account.statusSuspended": "Suspended",
   "account.statusBanned": "Banned",
   "account.pendingTitle": "Account activation required",
@@ -167,7 +161,7 @@ const en = {
   "account.activeTitle": "Account active",
   "account.activeBody":
     "Your account is active. Earning activities become available as their services go live.",
-  "account.stateUnavailable": "Account status is currently unavailable.",
+  "account.stateUnavailable": "Account status is not available in this preview.",
   "restriction.suspendedTitle": "Account suspended",
   "restriction.suspendedBody":
     "Earning activities are unavailable while this account is suspended. Contact support for assistance.",
@@ -179,7 +173,7 @@ const en = {
   // ---- Activation prompt and page ----
   "activation.promptTitle": "Account Activation Required",
   "activation.promptBody":
-    "Your account needs to be activated before you can participate in earning activities on Referrago. Confirmed activation details will appear here when the service is available.",
+    "Your account needs to be activated before you can participate in earning activities on Referrago. Activate your account with a one-time payment of 3,150 FCFA to unlock access to all earning services.",
   "activation.activateAccount": "Activate My Account",
   "activation.continueBrowsing": "Continue Browsing",
   "activation.metaTitle": "Account activation",
@@ -187,16 +181,17 @@ const en = {
   "activation.description":
     "Unlock access to all earning opportunities on Referrago by activating your account. Your account remains Pending until the backend confirms activation.",
   "activation.priceTitle": "Activation fee",
-  "activation.priceAmount": "3,150 FCFA",
   "activation.priceOneTime": "One-time account activation fee.",
   "activation.benefitsTitle": "What activation unlocks",
   "activation.benefitSurveys": "Participate in paid surveys.",
   "activation.benefitOfferwalls": "Access offerwall tasks.",
   "activation.benefitAffiliates": "Participate in affiliate programmes.",
   "activation.benefitReferrals": "Unlock referral earning activities.",
+  "activation.priceUnavailable":
+    "The activation amount and currency have not been supplied yet. No payment can be started until they are confirmed.",
   "activation.startPayment": "Begin activation payment",
   "activation.integrationUnavailable":
-    "Activation is not available yet. We will show the confirmed details here when the service is connected.",
+    "Payment initiation is not connected yet. Developer 3 will provide the payment integration.",
   "activation.notStartedTitle": "Payment not started",
   "activation.notStartedBody":
     "Review the activation information before beginning when payment integration is available.",
@@ -289,10 +284,9 @@ const en = {
   "login.metaTitle": "Sign in",
   "login.metaDescription": "Sign in to your Referrago account.",
   "login.title": "Sign in",
-  "login.description":
-    "Use your email or username to access your account.",
-  "login.identifierLabel": "Email or username",
-  "login.identifierPlaceholder": "you@example.com",
+  "login.description": "Use your email to access your account.",
+  "login.emailLabel": "Email",
+  "login.emailPlaceholder": "you@example.com",
   "login.passwordLabel": "Password",
   "login.passwordPlaceholder": "Your password",
   "login.forgotLink": "Forgot password?",
@@ -511,9 +505,6 @@ const en = {
     "Use 3 to 20 letters, numbers, or underscores.",
   "validation.country.required": "Select your country.",
   "validation.country.invalid": "Country must be a two-letter code.",
-  "validation.identifier.required":
-    "Enter your email or username.",
-
   // ---- Authentication errors ----
   "error.notConfigured":
     "Authentication is not configured in this environment yet. Set the Supabase variables in .env.local to enable sign-in.",
@@ -521,8 +512,6 @@ const en = {
     "Could not reach the authentication service. Check your connection and try again.",
   "error.invalidCredentials":
     "Invalid login details. Check your credentials and try again.",
-  "error.identifierLoginUnavailable":
-    "Signing in with a username is not enabled on the backend yet. Use your email address, or contact support.",
   "error.usernameTaken":
     "This username is already taken. Please choose another one.",
   "error.emailTaken":
@@ -673,13 +662,7 @@ const fr: Record<TranslationKey, string> = {
   // ---- Sprint 2 account access ----
   "nav.restricted": "Restreint",
   "account.statusPending": "En attente",
-  "account.statusActive": "En regle",
-  "account.activationStatus": "Statut d'activation",
-  "account.activationConfirmed": "Active",
-  "account.activationNotConfirmed": "Non confirme",
-  "account.activationUnknownTitle": "Activation non confirmee",
-  "account.activationUnknownBody":
-    "Le backend n'a pas confirme l'activation. Un statut de profil Actif ne signifie pas que l'activation est terminee.",
+  "account.statusActive": "Actif",
   "account.statusSuspended": "Suspendu",
   "account.statusBanned": "Bloque",
   "account.pendingTitle": "Activation du compte requise",
@@ -688,7 +671,7 @@ const fr: Record<TranslationKey, string> = {
   "account.activeTitle": "Compte actif",
   "account.activeBody":
     "Votre compte est actif. Les activites deviennent disponibles au fur et a mesure des integrations.",
-  "account.stateUnavailable": "Le statut du compte est actuellement indisponible.",
+  "account.stateUnavailable": "Le statut du compte n'est pas disponible dans cet apercu.",
   "restriction.suspendedTitle": "Compte suspendu",
   "restriction.suspendedBody":
     "Les activites de gain sont indisponibles pendant la suspension. Contactez l'assistance.",
@@ -700,7 +683,7 @@ const fr: Record<TranslationKey, string> = {
   // ---- Activation prompt and page ----
   "activation.promptTitle": "Activation du compte requise",
   "activation.promptBody":
-    "Votre compte doit etre active avant de pouvoir participer aux activites de gain sur Referrago. Les details confirmes apparaitront ici lorsque le service sera disponible.",
+    "Votre compte doit etre active avant de pouvoir participer aux activites de gain sur Referrago. Activez votre compte avec un paiement unique de 3 150 FCFA pour debloquer tous les services de gain.",
   "activation.activateAccount": "Activer mon compte",
   "activation.continueBrowsing": "Continuer a explorer",
   "activation.metaTitle": "Activation du compte",
@@ -708,16 +691,17 @@ const fr: Record<TranslationKey, string> = {
   "activation.description":
     "Debloquez l'acces a toutes les opportunites de gain sur Referrago en activant votre compte. Le compte reste En attente jusqu'a confirmation par le backend.",
   "activation.priceTitle": "Frais d'activation",
-  "activation.priceAmount": "3 150 FCFA",
   "activation.priceOneTime": "Frais d'activation unique du compte.",
   "activation.benefitsTitle": "Ce que l'activation debloque",
   "activation.benefitSurveys": "Participer aux sondages remuneres.",
   "activation.benefitOfferwalls": "Acceder aux taches du mur d'offres.",
   "activation.benefitAffiliates": "Participer aux programmes d'affiliation.",
   "activation.benefitReferrals": "Debloquer les activites de parrainage.",
+  "activation.priceUnavailable":
+    "Le montant et la devise n'ont pas encore ete fournis. Aucun paiement ne peut commencer avant confirmation.",
   "activation.startPayment": "Commencer le paiement d'activation",
   "activation.integrationUnavailable":
-    "L'activation n'est pas encore disponible. Les details confirmes apparaitront ici lorsque le service sera connecte.",
+    "L'initiation du paiement n'est pas encore connectee. Le Developpeur 3 fournira l'integration.",
   "activation.notStartedTitle": "Paiement non commence",
   "activation.notStartedBody":
     "Consultez les informations d'activation avant de commencer quand l'integration sera disponible.",
@@ -811,10 +795,9 @@ const fr: Record<TranslationKey, string> = {
   "login.metaDescription": "Connectez-vous a votre compte Referrago.",
   "login.title": "Connexion",
   "login.description":
-    "Utilisez votre e-mail ou votre nom d'utilisateur pour acceder a votre compte.",
-  "login.identifierLabel":
-    "E-mail ou nom d'utilisateur",
-  "login.identifierPlaceholder": "vous@exemple.com",
+    "Utilisez votre e-mail pour acceder a votre compte.",
+  "login.emailLabel": "E-mail",
+  "login.emailPlaceholder": "vous@exemple.com",
   "login.passwordLabel": "Mot de passe",
   "login.passwordPlaceholder": "Votre mot de passe",
   "login.forgotLink": "Mot de passe oublie ?",
@@ -1038,9 +1021,6 @@ const fr: Record<TranslationKey, string> = {
     "Utilisez 3 a 20 lettres, chiffres ou tirets bas.",
   "validation.country.required": "Selectionnez votre pays.",
   "validation.country.invalid": "Le pays doit etre un code a deux lettres.",
-  "validation.identifier.required":
-    "Saisissez votre e-mail ou nom d'utilisateur.",
-
   // ---- Authentication errors ----
   "error.notConfigured":
     "L'authentification n'est pas encore configuree dans cet environnement. Definissez les variables Supabase dans .env.local pour activer la connexion.",
@@ -1048,8 +1028,6 @@ const fr: Record<TranslationKey, string> = {
     "Impossible de joindre le service d'authentification. Verifiez votre connexion et reessayez.",
   "error.invalidCredentials":
     "Identifiants invalides. Verifiez vos informations et reessayez.",
-  "error.identifierLoginUnavailable":
-    "La connexion avec un nom d'utilisateur n'est pas encore activee cote backend. Utilisez votre adresse e-mail ou contactez l'assistance.",
   "error.usernameTaken":
     "Ce nom d'utilisateur est deja pris. Veuillez en choisir un autre.",
   "error.emailTaken":

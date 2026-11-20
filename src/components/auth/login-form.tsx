@@ -8,20 +8,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NotificationBanner } from "@/components/ui/notification-banner";
 import { useTranslation } from "@/i18n/context";
-import { getIdentifierError, PASSWORD_MIN_LENGTH } from "@/lib/validation";
-import { signInWithIdentifier } from "@/services/auth.service";
+import { getEmailError, PASSWORD_MIN_LENGTH } from "@/lib/validation";
+import { signInWithPassword } from "@/services/auth.service";
 import type { AuthError } from "@/types/auth";
 import { PasswordInput } from "./password-input";
 
 interface FieldErrors {
-  identifier?: string;
+  email?: string;
   password?: string;
 }
 
 /**
- * Sign-in form. The single identifier field accepts an email address or a
- * username; the auth service classifies the value and routes it
- * appropriately.
+ * Sign-in form. Supabase authentication uses an email address and password.
  *
  * A redirect to /dashboard happens ONLY after the service reports a genuine
  * success; NOT_CONFIGURED or provider errors render an inline banner.
@@ -29,7 +27,7 @@ interface FieldErrors {
 export function LoginForm() {
   const router = useRouter();
   const t = useTranslation();
-  const [identifier, setIdentifier] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<AuthError | null>(null);
@@ -40,9 +38,9 @@ export function LoginForm() {
     setFormError(null);
 
     const errors: FieldErrors = {};
-    const identifierError = getIdentifierError(identifier);
-    if (identifierError) {
-      errors.identifier = t(identifierError);
+    const emailError = getEmailError(email);
+    if (emailError) {
+      errors.email = t(emailError);
     }
     if (!password) {
       errors.password = t("validation.password.enterYours");
@@ -53,7 +51,7 @@ export function LoginForm() {
     }
 
     setSubmitting(true);
-    const result = await signInWithIdentifier({ identifier, password });
+    const result = await signInWithPassword({ email, password });
     setSubmitting(false);
 
     if (!result.ok) {
@@ -78,22 +76,22 @@ export function LoginForm() {
       ) : null}
 
       <Input
-        label={t("login.identifierLabel")}
-        name="identifier"
-        type="text"
-        autoComplete="username"
+        label={t("login.emailLabel")}
+        name="email"
+        type="email"
+        autoComplete="email"
         autoCapitalize="none"
         spellCheck={false}
         required
-        placeholder={t("login.identifierPlaceholder")}
-        value={identifier}
-        error={fieldErrors.identifier}
+        placeholder={t("login.emailPlaceholder")}
+        value={email}
+        error={fieldErrors.email}
         onChange={(event) => {
-          setIdentifier(event.target.value);
-          if (fieldErrors.identifier) {
+          setEmail(event.target.value);
+          if (fieldErrors.email) {
             setFieldErrors((previous) => ({
               ...previous,
-              identifier: undefined,
+              email: undefined,
             }));
           }
         }}

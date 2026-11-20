@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { DashboardView } from "@/components/dashboard/dashboard-view";
 import { getTranslator } from "@/i18n/server";
-import { loadVerifiedAccountState } from "@/lib/account-route-server";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getCurrentUser } from "@/lib/supabase/server";
 import { getDashboardData } from "@/services/dashboard.service";
@@ -55,14 +54,12 @@ export default async function DashboardPage({
     token: user?.accessToken ?? null,
     preview: typeof preview === "string" ? preview : undefined,
   });
-  const accountState = await loadVerifiedAccountState(user);
 
   return (
     <DashboardView
       result={result}
       configured={configured}
       email={user?.email ?? null}
-      accountState={accountState}
     />
   );
 }

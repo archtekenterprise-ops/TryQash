@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -93,9 +94,15 @@ export function AppShell({ children, accountState = null }: AppShellProps) {
             </button>
             <Link
               href="/dashboard"
-              className="rounded-control text-base font-semibold tracking-tight text-heading"
+              className="inline-flex rounded-control"
             >
-              Referrago
+              <Image
+                src="/referrago-logo.png"
+                alt="Referrago"
+                width={690}
+                height={160}
+                className="h-7 w-auto"
+              />
             </Link>
             <LanguageSwitcher className="ml-auto" />
           </div>

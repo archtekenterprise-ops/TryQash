@@ -82,10 +82,3 @@ export function getCountryError(value: string): TranslationKey | null {
   return null;
 }
 
-/** Login accepts an email address or a username. */
-export function getIdentifierError(value: string): TranslationKey | null {
-  if (!value.trim()) {
-    return "validation.identifier.required";
-  }
-  return null;
-}

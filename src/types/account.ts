@@ -32,7 +32,7 @@ export interface ActivationPrice {
 export interface AccountAccessState {
   emailVerified: boolean;
   accountStatus: AccountStatus;
-  activationPaymentStatus: ActivationPaymentStatus | null;
+  activationPaymentStatus: ActivationPaymentStatus;
   activationPrice: ActivationPrice | null;
 }
 
