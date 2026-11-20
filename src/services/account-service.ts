@@ -28,7 +28,7 @@ export async function ensureUserIsActive(): Promise<boolean> {
 /**
  * Règle 3: Crée la tentative de paiement et initialise la transaction avec SasPay
  */
-export async function initiateSasPayActivation(userId: string, email: string, amount: number = 1000) {
+export async function initiateSasPayActivation(userId: string, email: string, userName: string, amount: number = 1000) {
   const supabase = await createServerSupabaseClient();
   const providerReference = `TRYQASH-ACT-${userId}-${Date.now()}`;
 
@@ -39,7 +39,7 @@ export async function initiateSasPayActivation(userId: string, email: string, am
       user_id: userId,
       provider_reference: providerReference,
       amount: amount.toFixed(2), // SasPay requiert souvent un format décimal string
-      currency: 'XAF', // Ou la devise utilisée au Cameroun
+      currency: 'XOF', // West African CFA (correct currency for SasPay)
       status: 'pending',
       created_at: new Date().toISOString(),
     });
@@ -49,7 +49,7 @@ export async function initiateSasPayActivation(userId: string, email: string, am
   }
 
   // 2. Appel à l'API SasPay pour générer le lien de paiement ou initier le push MoMo
-  const sasPayResponse = await fetch('https://api.saspay.io/v1/payments', { // URL d'exemple selon l'API SasPay
+  const sasPayResponse = await fetch('https://api.saspay.me/api/v1/checkout-sessions/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -57,10 +57,12 @@ export async function initiateSasPayActivation(userId: string, email: string, am
     },
     body: JSON.stringify({
       amount: amount.toFixed(2),
-      currency: 'XAF',
+      currency: 'XOF',
       reference: providerReference,
       customer_email: email,
+      customer_name: userName,
       description: "Activation de compte TryQash",
+      return_url: `${process.env.NEXT_PUBLIC_APP_URL}/activate-account`,
     }),
   });
 
@@ -71,8 +73,11 @@ export async function initiateSasPayActivation(userId: string, email: string, am
   }
 
   // Retourne les infos pour rediriger l'utilisateur vers le paiement
+  // SasPay response is wrapped in paymentData.data
+  const checkoutData = paymentData.data || paymentData;
   return {
     providerReference,
-    paymentUrl: paymentData.payment_url || paymentData.checkout_url,
+    sasPayId: checkoutData.id,
+    paymentUrl: checkoutData.checkout_url,
   };
 }
