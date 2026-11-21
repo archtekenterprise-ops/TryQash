@@ -5,7 +5,7 @@ import type {
   ActivationPaymentStatus,
 } from "@/types/account";
 
-export const ACCOUNT_MOCK_ENABLED = true;
+export const ACCOUNT_MOCK_ENABLED = false;
 
 const ACCOUNT_STATUSES: AccountStatus[] = [
   "pending",
