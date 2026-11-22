@@ -47,13 +47,21 @@ export async function POST(request: Request) {
     const serviceRole = getServiceRoleClient(); // Use service role to bypass RLS for webhook updates
 
     // 2. Consulter le "carnet de notes" pour retrouver le paiement
+    console.log('Looking for payment with reference:', reference);
     const { data: paymentRecord, error: fetchError } = await serviceRole
       .from('activation_payments')
       .select('*')
       .eq('provider_reference', reference)
       .single();
 
+    console.log('Payment record lookup result:', {
+      found: !!paymentRecord,
+      error: fetchError,
+      record: paymentRecord,
+    });
+
     if (fetchError || !paymentRecord) {
+      console.error('Payment record not found for reference:', reference);
       return NextResponse.json({ message: 'Payment record not found' }, { status: 404 });
     }
 
