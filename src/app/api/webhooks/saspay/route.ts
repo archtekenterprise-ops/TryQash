@@ -8,20 +8,35 @@ export async function POST(request: Request) {
     const rawBody = await request.text();
     const signature = request.headers.get('x-saspay-signature') || '';
 
+    console.log('Webhook received:', {
+      signature: signature ? 'present' : 'missing',
+      bodyLength: rawBody.length,
+      bodyPreview: rawBody.substring(0, 200),
+    });
+
     // 1. Sécurité : Vérification de la signature du webhook SasPay (optionnel mais recommandé si fourni par SasPay)
     const computedSignature = crypto
       .createHmac('sha256', process.env.SASPAY_WEBHOOK_SECRET || '')
       .update(rawBody)
       .digest('hex');
 
+    console.log('Signature verification:', {
+      received: signature,
+      computed: computedSignature,
+      match: signature === computedSignature,
+    });
+
     if (process.env.NODE_ENV === 'production' && signature !== computedSignature) {
       return NextResponse.json({ message: 'Invalid webhook signature' }, { status: 401 });
     }
 
     const event = JSON.parse(rawBody);
+    console.log('Parsed webhook event:', event);
+
     const { reference, status, amount } = event; // 'reference' correspond à notre providerReference
 
     if (!reference) {
+      console.error('Missing reference in webhook event');
       return NextResponse.json({ message: 'Missing reference' }, { status: 400 });
     }
 
