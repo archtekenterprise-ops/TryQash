@@ -1,85 +1,184 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getServiceRoleClient } from '@/lib/supabase/service-role';
 import crypto from 'crypto';
+
+// Match the API environment to the secret key prefix (sk_live_* → live,
+// sk_test_* → sandbox), independent of NODE_ENV.
+const SASPAY_API_BASE = (process.env.SASPAY_SECRET_KEY || '').startsWith('sk_live')
+  ? 'https://api.saspay.me/api/v1'
+  : 'https://sandbox-api.saspay.me/api/v1';
+
+const WEBHOOK_TOLERANCE_SECONDS = 300;
+
+function verifySignature(rawBody: string, signature: string, timestamp: string): boolean {
+  const secret = process.env.SASPAY_WEBHOOK_SECRET;
+  if (!secret || !signature || !timestamp) return false;
+
+  // Reject stale timestamps to prevent replay attacks
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > WEBHOOK_TOLERANCE_SECONDS) {
+    return false;
+  }
+
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(`${timestamp}.${rawBody}`)
+    .digest('hex');
+
+  const a = Buffer.from(signature);
+  const b = Buffer.from(expected);
+  return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+/**
+ * Resolve which activation_payments row a SasPay transaction belongs to.
+ *
+ * The webhook only carries the *transaction* reference/id — generated when the
+ * customer pays, long after we created the checkout session. Our DB stores the
+ * checkout session UUID in provider_reference, so we poll each pending
+ * session's status endpoint until transaction_id / transaction_reference match.
+ */
+async function findPaymentRecord(data: {
+  id?: string;
+  reference?: string;
+  metadata?: { reference?: string };
+}) {
+  const serviceRole = getServiceRoleClient();
+
+  // Fast path: our own reference echoed back through session metadata
+  const ourReference = data.metadata?.reference;
+  if (ourReference) {
+    const { data: byMetadata } = await serviceRole
+      .from('activation_payments')
+      .select('*')
+      .eq('provider_reference', ourReference)
+      .maybeSingle();
+    // Note: provider_reference stores the session UUID, so this only matches
+    // rows written by older versions. Kept for safety.
+    if (byMetadata) return byMetadata;
+  }
+
+  // Direct match (legacy rows or future flows storing SasPay references)
+  if (data.reference) {
+    const { data: byReference } = await serviceRole
+      .from('activation_payments')
+      .select('*')
+      .eq('provider_reference', data.reference)
+      .maybeSingle();
+    if (byReference) return byReference;
+  }
+
+  // Slow path: resolve pending sessions via the SasPay status endpoint
+  const { data: pending } = await serviceRole
+    .from('activation_payments')
+    .select('*')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(50);
+
+  for (const payment of pending ?? []) {
+    try {
+      const res = await fetch(
+        `${SASPAY_API_BASE}/checkout-sessions/${payment.provider_reference}/status/`,
+        { headers: { Authorization: `Bearer ${process.env.SASPAY_SECRET_KEY}` } }
+      );
+      if (!res.ok) continue;
+      const statusData = await res.json();
+      const session = statusData.data || statusData;
+
+      if (
+        (data.id && session.transaction_id === data.id) ||
+        (data.reference && session.transaction_reference === data.reference)
+      ) {
+        return payment;
+      }
+    } catch (err) {
+      console.error('Failed to check session status for payment', payment.id, err);
+    }
+  }
+
+  return null;
+}
 
 export async function POST(request: Request) {
   try {
     const rawBody = await request.text();
-    const signature = request.headers.get('x-saspay-signature') || '';
+    const signature = request.headers.get('x-webhook-signature') || '';
+    const timestamp = request.headers.get('x-webhook-timestamp') || '';
+    const eventName = request.headers.get('x-webhook-event') || '';
 
     console.log('Webhook received:', {
+      event: eventName,
       signature: signature ? 'present' : 'missing',
+      timestamp: timestamp || 'missing',
       bodyLength: rawBody.length,
       bodyPreview: rawBody.substring(0, 200),
     });
 
-    // 1. Sécurité : Vérification de la signature du webhook SasPay (optionnel mais recommandé si fourni par SasPay)
-    const computedSignature = crypto
-      .createHmac('sha256', process.env.SASPAY_WEBHOOK_SECRET || '')
-      .update(rawBody)
-      .digest('hex');
+    const validSignature = verifySignature(rawBody, signature, timestamp);
+    console.log('Signature verification:', { valid: validSignature });
 
-    console.log('Signature verification:', {
-      received: signature,
-      computed: computedSignature,
-      match: signature === computedSignature,
-    });
-
-    if (process.env.NODE_ENV === 'production' && signature !== computedSignature) {
+    if (process.env.NODE_ENV === 'production' && !validSignature) {
       return NextResponse.json({ message: 'Invalid webhook signature' }, { status: 401 });
     }
 
     const event = JSON.parse(rawBody);
-    console.log('Parsed webhook event:', event);
+    const resolvedEventName = event.event || eventName;
+    const data = event.data || {};
+    console.log('Parsed webhook event:', resolvedEventName, data);
 
-    // SasPay webhook payload structure: { data: { reference, status, ... }, event: "transaction.success" }
-    const reference = event.data?.reference;
-    const status = event.data?.status?.toLowerCase(); // Convert SUCCESS to successful
-    const amount = event.data?.amount;
+    // transaction.created (and any non-final event) carries status PENDING —
+    // acknowledge it without touching the payment record.
+    const status = String(data.status || '').toUpperCase();
+    const isFinal =
+      resolvedEventName === 'transaction.success' ||
+      resolvedEventName === 'transaction.failed' ||
+      resolvedEventName === 'transaction.cancelled' ||
+      status === 'SUCCESS' ||
+      status === 'FAILED' ||
+      status === 'CANCELLED';
 
-    if (!reference) {
-      console.error('Missing reference in webhook event');
-      return NextResponse.json({ message: 'Missing reference' }, { status: 400 });
+    if (!isFinal) {
+      return NextResponse.json({ success: true, message: 'Event acknowledged' });
     }
 
-    const supabase = await createServerSupabaseClient();
-    const serviceRole = getServiceRoleClient(); // Use service role to bypass RLS for webhook updates
+    if (!data.reference && !data.id) {
+      console.error('Missing reference/id in webhook event');
+      return NextResponse.json({ message: 'Missing transaction identifier' }, { status: 400 });
+    }
 
-    // 2. Consulter le "carnet de notes" pour retrouver le paiement
-    console.log('Looking for payment with reference:', reference);
-    const { data: paymentRecord, error: fetchError } = await serviceRole
-      .from('activation_payments')
-      .select('*')
-      .eq('provider_reference', reference)
-      .single();
+    const serviceRole = getServiceRoleClient(); // bypass RLS for webhook updates
 
-    console.log('Payment record lookup result:', {
-      found: !!paymentRecord,
-      error: fetchError,
-      record: paymentRecord,
-    });
+    // Retrouver le paiement correspondant à cette transaction SasPay
+    const paymentRecord = await findPaymentRecord(data);
 
-    if (fetchError || !paymentRecord) {
-      console.error('Payment record not found for reference:', reference);
+    if (!paymentRecord) {
+      console.error('Payment record not found for transaction:', {
+        id: data.id,
+        reference: data.reference,
+        metadata: data.metadata,
+      });
+      // 404 makes SasPay retry — correct, since the session status may not be
+      // queryable yet when transaction.created arrives.
       return NextResponse.json({ message: 'Payment record not found' }, { status: 404 });
     }
 
-    // Gestion de l'idempotence (éviter de traiter 2 fois le même webhook réussi)
+    // Idempotence : ne pas retraiter un webhook déjà finalisé
     if (paymentRecord.status === 'successful') {
       return NextResponse.json({ message: 'Event already processed' }, { status: 200 });
     }
 
-    // 3. Vérifier si le paiement est réellement validé par SasPay
-    if (status === 'successful' || status === 'success' || status === 'completed') {
+    const isSuccess =
+      resolvedEventName === 'transaction.success' ||
+      status === 'SUCCESS' ||
+      status === 'COMPLETED';
 
-      // Mettre à jour le carnet de notes (le paiement passe à successful)
+    if (isSuccess) {
+      // Mettre à jour le paiement puis ouvrir la porte : pending → active
       await serviceRole
         .from('activation_payments')
         .update({ status: 'successful', updated_at: new Date().toISOString() })
         .eq('id', paymentRecord.id);
 
-      // Règle 4 : Ouvrir la porte ! Mettre à jour le statut du compte utilisateur de 'pending' à 'active'
       const { error: updateError } = await serviceRole
         .from('profiles')
         .update({ status: 'active', updated_at: new Date().toISOString() })
@@ -90,16 +189,15 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json({ success: true, message: 'Account successfully activated via SasPay' });
-    } else {
-      // Si le paiement a échoué ou a été annulé
-      await serviceRole
-        .from('activation_payments')
-        .update({ status: 'failed', updated_at: new Date().toISOString() })
-        .eq('id', paymentRecord.id);
-
-      return NextResponse.json({ success: true, message: 'Payment failure recorded' });
     }
 
+    // Paiement échoué ou annulé
+    await serviceRole
+      .from('activation_payments')
+      .update({ status: 'failed', updated_at: new Date().toISOString() })
+      .eq('id', paymentRecord.id);
+
+    return NextResponse.json({ success: true, message: 'Payment failure recorded' });
   } catch (error) {
     console.error('SasPay webhook error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
