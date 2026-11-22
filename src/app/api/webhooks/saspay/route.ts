@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { getServiceRoleClient } from '@/lib/supabase/service-role';
 import crypto from 'crypto';
 
 export async function POST(request: Request) {
@@ -25,9 +26,10 @@ export async function POST(request: Request) {
     }
 
     const supabase = await createServerSupabaseClient();
+    const serviceRole = getServiceRoleClient(); // Use service role to bypass RLS for webhook updates
 
     // 2. Consulter le "carnet de notes" pour retrouver le paiement
-    const { data: paymentRecord, error: fetchError } = await supabase
+    const { data: paymentRecord, error: fetchError } = await serviceRole
       .from('activation_payments')
       .select('*')
       .eq('provider_reference', reference)
@@ -44,15 +46,15 @@ export async function POST(request: Request) {
 
     // 3. Vérifier si le paiement est réellement validé par SasPay
     if (status === 'successful' || status === 'completed') {
-      
+
       // Mettre à jour le carnet de notes (le paiement passe à successful)
-      await supabase
+      await serviceRole
         .from('activation_payments')
         .update({ status: 'successful', updated_at: new Date().toISOString() })
         .eq('id', paymentRecord.id);
 
       // Règle 4 : Ouvrir la porte ! Mettre à jour le statut du compte utilisateur de 'pending' à 'active'
-      const { error: updateError } = await supabase
+      const { error: updateError } = await serviceRole
         .from('profiles')
         .update({ status: 'active', updated_at: new Date().toISOString() })
         .eq('id', paymentRecord.user_id);
@@ -64,7 +66,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Account successfully activated via SasPay' });
     } else {
       // Si le paiement a échoué ou a été annulé
-      await supabase
+      await serviceRole
         .from('activation_payments')
         .update({ status: 'failed', updated_at: new Date().toISOString() })
         .eq('id', paymentRecord.id);

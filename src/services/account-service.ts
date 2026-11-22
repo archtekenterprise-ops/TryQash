@@ -1,4 +1,5 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { getServiceRoleClient } from "@/lib/supabase/service-role";
 
 export type AccountStatus = 'pending' | 'active' | 'suspended' | 'banned';
 
@@ -30,10 +31,12 @@ export async function ensureUserIsActive(): Promise<boolean> {
  */
 export async function initiateSasPayActivation(userId: string, email: string, userName: string, amount: number = 1000) {
   const supabase = await createServerSupabaseClient();
+  const serviceRole = getServiceRoleClient(); // Use service role to bypass RLS
   const providerReference = `TRYQASH-ACT-${userId}-${Date.now()}`;
 
   // 1. Enregistrement initial dans le "carnet de notes" (supabase) avec le statut 'pending'
-  const { error: dbError } = await supabase
+  // Use service role client to bypass RLS for payment initiation
+  const { error: dbError } = await serviceRole
     .from('activation_payments')
     .insert({
       user_id: userId,
