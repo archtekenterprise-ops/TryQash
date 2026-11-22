@@ -72,7 +72,12 @@ export async function initiateSasPayActivation(userId: string, email: string, us
   const paymentData = await sasPayResponse.json();
 
   if (!sasPayResponse.ok) {
-    throw new Error(`SasPay initialization failed: ${paymentData.message || 'Unknown error'}`);
+    console.error('SasPay API error:', {
+      status: sasPayResponse.status,
+      statusText: sasPayResponse.statusText,
+      body: paymentData,
+    });
+    throw new Error(`SasPay initialization failed: ${JSON.stringify(paymentData)}`);
   }
 
   // Retourne les infos pour rediriger l'utilisateur vers le paiement
