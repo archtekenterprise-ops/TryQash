@@ -1,6 +1,9 @@
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
 
+// Set to true to mock SasPay API for testing without real credentials
+const MOCK_SASPAY_MODE = true;
+
 export type AccountStatus = 'pending' | 'active' | 'suspended' | 'banned';
 
 /**
@@ -52,7 +55,12 @@ export async function initiateSasPayActivation(userId: string, email: string, us
   }
 
   // 2. Appel à l'API SasPay pour générer le lien de paiement ou initier le push MoMo
-  const sasPayResponse = await fetch('https://api.saspay.me/api/v1/checkout-sessions/', {
+  // Use sandbox endpoint for test keys to avoid real charges
+  const baseUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://api.saspay.me/api/v1/checkout-sessions/'
+    : 'https://sandbox-api.saspay.me/api/v1/checkout-sessions/';
+  
+  const sasPayResponse = await fetch(baseUrl, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
