@@ -29,12 +29,12 @@ export async function POST(request: NextRequest) {
 
     const userName = profile?.username || user.email || 'User';
 
-    // Initiate payment (default 1000 XOF)
+    // Initiate payment (default 3500 XOF)
     const result = await initiateSasPayActivation(
       user.id,
       user.email || '',
       userName,
-      1000
+      3500
     );
 
     return NextResponse.json({
