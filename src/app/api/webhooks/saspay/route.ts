@@ -33,7 +33,10 @@ export async function POST(request: Request) {
     const event = JSON.parse(rawBody);
     console.log('Parsed webhook event:', event);
 
-    const { reference, status, amount } = event; // 'reference' correspond à notre providerReference
+    // SasPay webhook payload structure: { data: { reference, status, ... }, event: "transaction.success" }
+    const reference = event.data?.reference;
+    const status = event.data?.status?.toLowerCase(); // Convert SUCCESS to successful
+    const amount = event.data?.amount;
 
     if (!reference) {
       console.error('Missing reference in webhook event');
@@ -60,7 +63,7 @@ export async function POST(request: Request) {
     }
 
     // 3. Vérifier si le paiement est réellement validé par SasPay
-    if (status === 'successful' || status === 'completed') {
+    if (status === 'successful' || status === 'success' || status === 'completed') {
 
       // Mettre à jour le carnet de notes (le paiement passe à successful)
       await serviceRole
