@@ -8,7 +8,9 @@ export const activationPayments = pgTable(
   'activation_payments',
   {
     id: uuid('id').defaultRandom().primaryKey(),
-    userId: uuid('user_id').notNull().references('auth.users', { onDelete: 'cascade' }),
+    // FK to auth.users is enforced by Supabase, not declared here since the
+    // auth schema isn't part of this Drizzle schema.
+    userId: uuid('user_id').notNull(),
     providerReference: text('provider_reference').notNull().unique(),
     amount: text('amount').notNull(),
     currency: text('currency').notNull().default('XAF'),
