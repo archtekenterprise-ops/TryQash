@@ -41,5 +41,5 @@ export type AccountServiceResult<T> =
   | { ok: true; data: T }
   | {
       ok: false;
-      error: "NOT_CONNECTED" | "NOT_AVAILABLE" | "UNKNOWN";
+      error: "NOT_CONNECTED" | "NOT_AVAILABLE" | "UNKNOWN" | "NETWORK_ERROR";
     };
