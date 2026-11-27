@@ -1,3 +1,4 @@
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { getServiceRoleClient } from "@/lib/supabase/service-role";
 
 // Set to true to mock SasPay API for testing without real credentials
